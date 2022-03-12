@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
-const http = axios.create({
+const http: AxiosInstance = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL,
 });
 

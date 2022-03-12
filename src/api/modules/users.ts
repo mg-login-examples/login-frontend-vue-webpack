@@ -1,13 +1,10 @@
+import { User } from "@/models/user.model";
 import http from "./base";
 
 const usersApi = {
-  async getUser(userId: number) {
+  async getUser(userId: number): Promise<User> {
     const response = await http.get(`/api/users/${userId}`);
-    return response.data;
-  },
-  async getUserQuotes(userId: number) {
-    const response = await http.get(`/api/users/${userId}/quotes/`);
-    return response.data;
+    return <User>response.data;
   },
 };
 
