@@ -25,8 +25,8 @@ export const useErrorsStore = defineStore("errors", {
     handleError(error: unknown) {
       this.errorMessage = extractErrorMessage(error);
       this.openSnackbar();
-      logError(error);
       this.errorHistory.push(error);
+      logError(error);
     },
   },
 });

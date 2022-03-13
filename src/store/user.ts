@@ -5,12 +5,12 @@ import backendApi from "@/api/backendApi";
 import { useErrorsStore } from "./errors";
 
 interface UserState {
-  user: User | undefined;
+  user: User | null;
 }
 
 export const useUserStore = defineStore("user", {
   state: (): UserState => ({
-    user: undefined,
+    user: null,
   }),
   actions: {
     async login(userId: number) {
@@ -19,7 +19,7 @@ export const useUserStore = defineStore("user", {
       } catch (error) {
         const errorStore = useErrorsStore();
         errorStore.handleError(error);
-        this.user = undefined;
+        this.user = null;
       }
     },
   },
