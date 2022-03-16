@@ -5,8 +5,6 @@ import backendApi from "@/api/backendApi";
 import { useErrorsStore } from "./errors";
 import { useUserStore } from "./user";
 
-const errorStore = useErrorsStore();
-
 interface QuotesState {
   quotes: Quote[];
   userQuotes: Quote[];
@@ -22,6 +20,7 @@ export const useQuotesStore = defineStore("quotes", {
       try {
         this.quotes = await backendApi.quotes.getQuotes();
       } catch (error) {
+        const errorStore = useErrorsStore();
         errorStore.handleError(error);
         this.quotes = [];
       }
@@ -34,6 +33,7 @@ export const useQuotesStore = defineStore("quotes", {
             userStore.user.id
           );
         } catch (error) {
+          const errorStore = useErrorsStore();
           errorStore.handleError(error);
           this.userQuotes = [];
         }
