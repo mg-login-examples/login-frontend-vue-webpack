@@ -73,15 +73,13 @@ describe("AppTopbar.vue", () => {
     expect(userStore.user).toBeNull();
     let logoutButton = wrapper.find("[data-test='topbar--logout-button']");
     expect(logoutButton.exists()).toBe(false);
-    let userDesignation = wrapper.find(
-      "[data-test='topbar--user-designation']"
-    );
+    let userDesignation = wrapper.find("[data-test='topbar--user-name']");
     expect(userDesignation.exists()).toBe(false);
     userStore.$patch({ user: fakeUser });
     await Vue.nextTick();
     logoutButton = wrapper.find("[data-test='topbar--logout-button']");
     expect(logoutButton.isVisible()).toBe(true);
-    userDesignation = wrapper.find("[data-test='topbar--user-designation']");
+    userDesignation = wrapper.find("[data-test='topbar--user-name']");
     expect(userDesignation.isVisible()).toBe(true);
   });
 });

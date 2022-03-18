@@ -21,7 +21,7 @@
       >
         Login
       </router-link>
-      <div v-if="userStore.user" data-test="topbar--user-designation">
+      <div v-if="userStore.user" data-test="topbar--user-name">
         {{ userStore.user.email }}
       </div>
       <button
