@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@pinia/testing": "^0.0.9",
-    "@types/faker": "^6.6.9",
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
