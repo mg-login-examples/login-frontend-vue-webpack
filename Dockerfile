@@ -21,9 +21,15 @@ CMD [ "npm", "run", "test:unit"]
 # CMD [ "npm", "run", "test:unit:watch"]
 
 # serve stage
-FROM install-stage as serve-dev-stage
+FROM install-stage as serve-local-stage
 EXPOSE 8080
 CMD [ "npm", "run", "serve" ]
+
+
+# serve stage
+FROM install-stage as serve-dev-stage
+EXPOSE 8080
+CMD [ "npm", "run", "serve", "--", "--mode", "development" ]
 
 
 
