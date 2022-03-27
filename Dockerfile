@@ -1,5 +1,5 @@
 # install stage
-FROM node:lts-alpine as install-stage
+FROM node:16.14-alpine as install-stage
 
 WORKDIR /app
 

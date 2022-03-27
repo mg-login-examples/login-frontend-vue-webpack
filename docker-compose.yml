@@ -26,6 +26,14 @@ services:
       - ./src:/app/src # live reload
     ports:
       - 8019:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 
   vueapp_serve_prod:
     profiles:
