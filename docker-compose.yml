@@ -26,6 +26,19 @@ services:
       - ./src:/app/src # live reload
     ports:
       - 8019:8080
+
+  vueapp_serve_dev_built:
+    profiles:
+      - frontend-dev-built-serve
+    networks:
+      - fullstack
+    build:
+      context: .
+      target: serve-dev-built-stage
+    volumes:
+      - ./src:/app/src # live reload
+    ports:
+      - 8019:80
     deploy:
       resources:
         limits:

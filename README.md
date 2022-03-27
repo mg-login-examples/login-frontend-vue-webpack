@@ -12,9 +12,13 @@
 
 ### Serve Code
 - Serve Dev (Accessible at http://localhost:8019)
-    - Build Docker Image & Start Containers: ```docker compose -p frontend --profile frontend-dev-serve up --build```
+    - Build Docker Image & Start Containers: ```docker compose -p frontend --profile frontend-dev-built-serve up --build```
     - Stop Containers: ```CTRL+C```
     - Delete Containers: ```docker compose -p frontend --profile frontend-dev-serve down```
+- Serve Dev Built (Accessible at http://localhost:8019)
+    - Build Docker Image & Start Containers: ```docker compose -p frontend --profile frontend-dev-built-serve up --build```
+    - Stop Containers: ```CTRL+C```
+    - Delete Containers: ```docker compose -p frontend --profile frontend-dev-built-serve down```
 - Serve Production (Accessible at http://localhost:8010)
     - Build Docker Image & Start Containers: ```docker compose -p frontend --profile frontend-prod-serve up --build```
     - Stop Containers: ```CTRL+C```

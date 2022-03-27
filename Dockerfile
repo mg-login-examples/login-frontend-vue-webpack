@@ -43,3 +43,14 @@ FROM nginx:stable-alpine as serve-prod-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+
+
+# build stage development
+FROM install-stage as build-dev-stage
+RUN npm run build -- --mode development
+
+# production stage
+FROM nginx:stable-alpine as serve-dev-built-stage
+COPY --from=build-dev-stage /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
