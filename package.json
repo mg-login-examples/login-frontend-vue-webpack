@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
+    "test:unit:allure-docker": "npm run test:unit && mv allure-results ../allure-docker/projects/frontend-unit/results",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "prepare": "husky install"
