@@ -7,12 +7,11 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "allure-docker:frontend-unit:new-results": "rm -rf ../allure-docker/projects/frontend-unit/results && mv allure-results ../allure-docker/projects/frontend-unit/results",
+    "allure-docker:frontend-unit:new-results": "rm -rf ../allure-docker/projects/frontend-unit/results && mv tests/unit/allure-results ../allure-docker/projects/frontend-unit/results",
     "test:unit:allure-docker": "npm run test:unit ; npm run allure-docker:frontend-unit:new-results",
     "allure-docker:frontend-e2e:new-results": "rm -rf ../allure-docker/projects/frontend-e2e/results && mv tests/e2e/allure-results ../allure-docker/projects/frontend-e2e/results",
     "test:e2e:allure-docker": "npm run test:e2e -- --headless ; npm run allure-docker:frontend-e2e:new-results",
     "dev_env:test:e2e:allure-docker": "CYPRESS_ENV_FILE='.env.development' npm run test:e2e:allure-docker",
-    "local_test_development:e2e": "CYPRESS_ENV_FILE='.env.development.local' npm run test:e2e -- --url http://localhost:8080/",
     "lint": "vue-cli-service lint",
     "prepare": "husky install"
   },
