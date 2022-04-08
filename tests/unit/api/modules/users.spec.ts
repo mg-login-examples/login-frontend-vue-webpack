@@ -13,6 +13,6 @@ describe("Api module: Users", () => {
   it("gets user by userId", async () => {
     mockedHttpGet.mockImplementation(mockAxiosGetUser);
     await expect(usersApi.getUser(fakeUser.id)).resolves.toEqual(fakeUser);
-    expect(http.get).toHaveBeenCalledWith(`/api/users/${fakeUser.id}`);
+    expect(http.get).toHaveBeenCalledWith(`/api/users/${fakeUser.id}/`);
   });
 });

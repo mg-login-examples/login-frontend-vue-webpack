@@ -9,11 +9,28 @@
 // /* eslint-disable import/no-extraneous-dependencies, global-require */
 // const webpack = require('@cypress/webpack-preprocessor')
 
+const cucumber = require("cypress-cucumber-preprocessor").default;
+const browserify = require("@cypress/browserify-preprocessor");
+const dotenvPlugin = require("cypress-dotenv");
+const allureWriter = require("@shelex/cypress-allure-plugin/writer");
+
 module.exports = (on, config) => {
   // on('file:preprocessor', webpack({
   //  webpackOptions: require('@vue/cli-service/webpack.config'),
   //  watchOptions: {}
   // }))
+  const options = {
+    ...browserify.defaultOptions,
+    typescript: require.resolve("typescript"),
+  };
+  on("file:preprocessor", cucumber(options));
+
+  const configOptions = process.env.CYPRESS_ENV_FILE
+    ? { path: process.env.CYPRESS_ENV_FILE }
+    : undefined;
+  config = dotenvPlugin(config, configOptions);
+
+  allureWriter(on, config);
 
   return Object.assign({}, config, {
     fixturesFolder: "tests/e2e/fixtures",
