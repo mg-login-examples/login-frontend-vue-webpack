@@ -29,7 +29,7 @@ jobs:
           source: "tests/unit/results.zip"
           target: "/home/ubuntu/allure-docker/projects/frontend-unit/"
           strip_components: 2
-      - name: Delete previous allure-results folder, unzip new one and delete zipped after
+      - name: Delete previous allure-results folder, unzip new results and delete zipped results, and generate report
         if: success() || failure()
         uses: appleboy/ssh-action@master
         with:
@@ -37,7 +37,12 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          script: cd /home/ubuntu/allure-docker/projects/frontend-unit && sudo rm -rf results && unzip results.zip && rm results.zip
+          script: >-
+            cd /home/ubuntu/allure-docker/projects/frontend-unit &&
+            sudo rm -rf results &&
+            unzip results.zip &&
+            rm results.zip &&
+            curl http://localhost:5050/allure-docker-service/generate-report?project_id=frontend-unit
       # - name: Add mysql password text file for a test mysql container
       #   run: echo "password" >> db/mysql_pwd.txt
       # - name: Deploy to Server 1

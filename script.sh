@@ -9,7 +9,7 @@ elif [ $case = "launch-frontend-only-dev-env" ]
 then
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend --profile frontend-dev build
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend --profile frontend-dev run vueapp_serve npm run serve -- --mode ec2_main
+   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend --profile frontend-dev run -d --service-ports vueapp_serve npm run serve -- --mode ec2_main
 elif [ $case = "launch-tdd" ]
 then
    # Stop all frontend project's containers, build vueapp container and run unit tests with watch
