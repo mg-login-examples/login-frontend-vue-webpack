@@ -1,0 +1,68 @@
+name: Push-to-EC2
+
+# Trigger deployment only on push to main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+      - name: Run unit tests
+        run: sudo ./script.sh run-unit-tests
+      - name: Zip allure reports
+        if: success() || failure()
+        run: cd tests/unit && mv allure-results results && zip -r results.zip results
+      - name: Copy zipped reports to allure server
+        if: success() || failure()
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "tests/unit/results.zip"
+          target: "/home/ubuntu/allure-docker/projects/frontend-unit/"
+          strip_components: 2
+      - name: Delete previous allure-results folder, unzip new one and delete zipped after
+        if: success() || failure()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: cd /home/ubuntu/allure-docker/projects/frontend-unit && sudo rm -rf results && unzip results.zip && rm results.zip
+      # - name: Add mysql password text file for a test mysql container
+      #   run: echo "password" >> db/mysql_pwd.txt
+      # - name: Deploy to Server 1
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+      #     REMOTE_HOST: ${{ secrets.HOST_DNS }}
+      #     REMOTE_USER: ${{ secrets.USERNAME }}
+      #     TARGET: ${{ secrets.TARGET_DIR }}
+      - name: Build & Restart Frontend - build new container to serve latest frontend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: >-
+            cd /home/ubuntu &&
+            sudo rm -rf frontend-vue-old &&
+            mv frontend-vue frontend-vue-old &&
+            git clone -b main https://github.com/mg-login-examples/login-frontend-vue.git frontend-vue &&
+            cd frontend-vue &&
+            git clone -b main https://github.com/mg-login-examples/backend-fastapi-vue.git backend &&
+            cd .. &&
+            cp frontend-vue-old/backend/db/mysql_pwd.txt frontend-vue/backend/db/ &&
+            sudo rm -rf frontend-vue-old &&
+            cd frontend-vue &&
+            ./script.sh launch-frontend-only-dev-env
