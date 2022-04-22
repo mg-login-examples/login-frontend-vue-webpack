@@ -21,20 +21,3 @@ services:
       target: serve-prod-stage
     ports:
       - 8010:80
-
-  vueapp_test_e2e:
-    profiles:
-      - fullstack-e2e
-    networks:
-      - fullstack # internally connects to backend for e2e tests
-    build:
-      context: .
-      dockerfile: ./cypress.Dockerfile
-    environment:
-      - CYPRESS_VIDEO=${CYPRESS_VIDEO-true}
-    depends_on:
-      - fastapi
-    volumes:
-      - ./src:/app/src
-      - ./tests:/app/tests
-      - ./cypress.json:/app/cypress.json
