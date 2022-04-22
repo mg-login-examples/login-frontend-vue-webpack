@@ -60,7 +60,7 @@ jobs:
             mv frontend-vue frontend-vue-old &&
             git clone -b main https://github.com/mg-login-examples/login-frontend-vue.git frontend-vue &&
             cd frontend-vue &&
-            git clone -b main https://github.com/mg-login-examples/backend-fastapi-vue.git backend &&
+            git clone -b main https://github.com/mg-login-examples/backend-fastapi.git backend &&
             cd .. &&
             cp frontend-vue-old/backend/db/mysql_pwd.txt frontend-vue/backend/db/ &&
             sudo rm -rf frontend-vue-old &&
