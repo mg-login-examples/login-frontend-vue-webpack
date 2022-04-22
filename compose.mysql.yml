@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=login
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-password
+    secrets:
+      - mysql-password
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    profiles:
+      - fullstack
+      - fullstack-e2e
+    networks:
+      - backend
+    volumes:
+      - mysql-data:/var/lib/${MYSQL_DOCKER_VOLUME-mysql}
+
+volumes:
+  mysql-data:
+
+secrets:
+  mysql-password:
+    file: backend/db/mysql_pwd.txt
