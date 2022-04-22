@@ -9,7 +9,8 @@ services:
       context: .
       target: serve-local-stage
     volumes:
-      - ./src:/app/src # live reload
+      - ./src:/app/src
+      - ./tests:/app/tests
     ports:
       - 8019:8080
 
