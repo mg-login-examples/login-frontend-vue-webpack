@@ -27,14 +27,19 @@ then
    # Stop all frontend project's containers, build all frontend project's containers including backend and run e2e tests
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend --profile fullstack-e2e build
-   export CYPRESS_ENV_FILE=env.ci_e2e
-   export CYPRESS_VIDEO=false
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend --profile fullstack-e2e run vueapp_test_e2e npm run test:e2e -- --headless --mode ci_e2e
+   export CYPRESS_ENV_FILE=.env.ci_e2e
+   # export CYPRESS_VIDEO=false
+   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend --profile fullstack-e2e run vueapp_test_e2e npm run test:e2e -- --mode ci_e2e
 elif [ $case = "launch-fullstack-local" ]
 then
    # Stop all frontend project's containers, build and run all frontend project's containers including backend
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend --profile fullstack up --build
+elif [ $case = "launch-backend-only" ]
+then
+   # Stop all frontend project's containers, build and run all frontend project's containers including backend
+   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend --profile fullstack up --build
 else
    echo "no option passed"
    echo "available options are:

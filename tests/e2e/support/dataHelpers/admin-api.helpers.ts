@@ -1,6 +1,8 @@
 export default class AdminAPIHelpers {
   static admin_api_base_url = Cypress.env("ADMIN_API_URL");
   static getQuotesUrl = `${this.admin_api_base_url}/resource/quotes/`;
+  static createUserUrl = `${this.admin_api_base_url}/resource/users/`;
+  static createQuoteUrl = `${this.admin_api_base_url}/resource/quotes/`;
 
   static getUserByIdUrl(userId: number) {
     return `${this.admin_api_base_url}/resource/users/${userId}/`;
@@ -16,7 +18,14 @@ export default class AdminAPIHelpers {
           response.status === 404 &&
           response.body.detail === "Item not found"
         ) {
-          throw new Error("User not found. TODO Create user if not found");
+          cy.request({
+            method: "POST",
+            url: this.createUserUrl,
+            body: {
+              email: "a@a.a",
+              password: "12345678",
+            },
+          });
         } else {
           throw new Error(
             `Unknown error in Admin API for GET user by id.
@@ -49,8 +58,21 @@ export default class AdminAPIHelpers {
     });
   }
 
+  static checkIfAtLeast1QuoteExists() {
+    return cy.request(this.getQuotesUrl).then((response) => {
+      if (response.body.length == 0) {
+        return false;
+      }
+      return true;
+    });
+  }
+
   static assertAtLeast1QuoteExists() {
-    cy.request(this.getQuotesUrl);
+    cy.request(this.getQuotesUrl).then((response) => {
+      if (response.body.length == 0) {
+        throw new Error("No quotes exist");
+      }
+    });
   }
 
   static createUserQuoteIfNoQuoteExists(userId: number) {
@@ -58,9 +80,14 @@ export default class AdminAPIHelpers {
       url: this.getUserByIdUrl(userId),
     }).then((response) => {
       if (response.body.quotes.length === 0) {
-        throw new Error(
-          "User has not written any quotes. TODO Create user quotes if not found"
-        );
+        cy.request({
+          method: "POST",
+          url: this.createQuoteUrl,
+          body: {
+            text: `quote by user ${userId}`,
+            author: response.body,
+          },
+        });
       }
     });
   }

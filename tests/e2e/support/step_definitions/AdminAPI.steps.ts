@@ -11,10 +11,25 @@ Given("an invalid userId {int} for which no user exists", (userId: number) => {
 });
 
 Given("a quote exists", () => {
-  AdminAPIHelpers.assertAtLeast1QuoteExists();
+  // TODO Improve step - reduce complexity by splitting or when user can be created with email
+  AdminAPIHelpers.checkIfAtLeast1QuoteExists().then((atLeast1QuoteExists) => {
+    if (!atLeast1QuoteExists) {
+      AdminAPIHelpers.createUserIfNoUserExists(1);
+      cy.then(() => {
+        AdminAPIHelpers.createUserQuoteIfNoQuoteExists(1);
+        cy.then(() => {
+          AdminAPIHelpers.assertAtLeast1QuoteExists();
+        });
+      });
+    } else {
+      AdminAPIHelpers.assertAtLeast1QuoteExists();
+    }
+  });
 });
 
 Given("user with userid {int} has written a quote", (userId: number) => {
   AdminAPIHelpers.createUserIfNoUserExists(userId);
-  AdminAPIHelpers.createUserQuoteIfNoQuoteExists(userId);
+  cy.then(() => {
+    AdminAPIHelpers.createUserQuoteIfNoQuoteExists(userId);
+  });
 });

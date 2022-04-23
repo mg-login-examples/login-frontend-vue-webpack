@@ -1,3 +1,4 @@
+@quote-feature
 Feature: All Quotes
 
   Scenario: View all quotes

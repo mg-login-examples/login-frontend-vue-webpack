@@ -30,7 +30,7 @@ module.exports = (on, config) => {
     : undefined;
   config = dotenvPlugin(config, configOptions);
 
-  allureWriter(on, config);
+  allureWriter(on, config); // Generate allure results from cypress results
 
   return Object.assign({}, config, {
     fixturesFolder: "tests/e2e/fixtures",
