@@ -11,13 +11,50 @@ jobs:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the files
+      - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Run unit tests
-        run: sudo ./script.sh run-unit-tests
+      # - name: Run unit tests
+      #   run: sudo ./script.sh run-unit-tests
+      # - name: Zip allure reports
+      #   if: success() || failure()
+      #   run: cd tests/unit && mv allure-results results && zip -r results.zip results
+      # - name: Copy zipped reports to allure server
+      #   if: success() || failure()
+      #   uses: appleboy/scp-action@master
+      #   with:
+      #     host: ${{ secrets.HOST_DNS }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     port: 22
+      #     source: "tests/unit/results.zip"
+      #     target: "/home/ubuntu/allure-docker/projects/frontend-unit/"
+      #     strip_components: 2
+      # - name: Delete previous allure-results folder, unzip new results and delete zipped results, and generate report
+      #   if: success() || failure()
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST_DNS }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     port: 22
+      #     script: >-
+      #       cd /home/ubuntu/allure-docker/projects/frontend-unit &&
+      #       sudo rm -rf results &&
+      #       unzip results.zip &&
+      #       rm results.zip &&
+      #       curl http://localhost:5050/allure-docker-service/generate-report?project_id=frontend-unit
+      - name: Checkout backend repo
+        uses: actions/checkout@v3
+        with:
+          repository: mg-login-examples/login-backend-fastapi
+          path: backend
+      - name: Add mysql password text file for a test mysql container
+        run: echo "password" >> backend/db/mysql_pwd.txt
+      - name: Run e2e tests
+        run: sudo ./script.sh run-e2e-tests
       - name: Zip allure reports
         if: success() || failure()
-        run: cd tests/unit && mv allure-results results && zip -r results.zip results
+        run: cd tests/allure-results && mv allure-results results && zip -r results.zip results
       - name: Copy zipped reports to allure server
         if: success() || failure()
         uses: appleboy/scp-action@master
@@ -26,8 +63,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          source: "tests/unit/results.zip"
-          target: "/home/ubuntu/allure-docker/projects/frontend-unit/"
+          source: "tests/e2e/results.zip"
+          target: "/home/ubuntu/allure-docker/projects/frontend-e2e/"
           strip_components: 2
       - name: Delete previous allure-results folder, unzip new results and delete zipped results, and generate report
         if: success() || failure()
@@ -38,20 +75,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: >-
-            cd /home/ubuntu/allure-docker/projects/frontend-unit &&
+            cd /home/ubuntu/allure-docker/projects/frontend-e2e &&
             sudo rm -rf results &&
             unzip results.zip &&
             rm results.zip &&
-            curl http://localhost:5050/allure-docker-service/generate-report?project_id=frontend-unit
-      # - name: Add mysql password text file for a test mysql container
-      #   run: echo "password" >> db/mysql_pwd.txt
-      # - name: Deploy to Server 1
-      #   uses: easingthemes/ssh-deploy@main
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-      #     REMOTE_HOST: ${{ secrets.HOST_DNS }}
-      #     REMOTE_USER: ${{ secrets.USERNAME }}
-      #     TARGET: ${{ secrets.TARGET_DIR }}
+            curl http://localhost:5050/allure-docker-service/generate-report?project_id=frontend-e2e
       - name: Build & Restart Frontend - build new container to serve latest frontend
         uses: appleboy/ssh-action@master
         with:
