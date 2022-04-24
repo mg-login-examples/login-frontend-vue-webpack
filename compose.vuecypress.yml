@@ -11,6 +11,9 @@ services:
       dockerfile: ./cypress.Dockerfile
     environment:
       - CYPRESS_VIDEO=${CYPRESS_VIDEO-true}
+      - CYPRESS_TAGS=${CYPRESS_TAGS}
+      # - CYPRESS_VERIFY_TIMEOUT=100000
+      - CYPRESS_ENV_FILE=${CYPRESS_ENV_FILE}
     depends_on:
       - fastapi
     volumes:
