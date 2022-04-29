@@ -1,5 +1,5 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
-import AdminAPIHelpers from "../dataHelpers/admin-api.helpers";
+import AdminAPIHelpers from "../dataHelpers/cywrap-api.helpers";
 import AllQuotesPage from "../pageObjects/all-quotes.page";
 
 import LoginPage from "../pageObjects/login.page";
@@ -9,22 +9,30 @@ Given("I go to login page", () => {
   LoginPage.goToLoginPage();
 });
 
-Given("I am logged in as a user with userId {int}", (userId: number) => {
-  AdminAPIHelpers.createUserIfNoUserExists(userId);
-  LoginPage.goToLoginPage();
-  LoginPage.enterUserId(userId);
-  LoginPage.clickOnLoginButton();
-  TopbarPage.assertLogoutButtonIsVisible();
-  AllQuotesPage.assertIsOpen();
-});
+Given(
+  "I am logged in as a user with email {string} and password {string}",
+  (email: string, password: string) => {
+    AdminAPIHelpers.createUserIfNoUserExists(email, password);
+    LoginPage.goToLoginPage();
+    LoginPage.enterUserEmail(email);
+    LoginPage.enterUserPassword(password);
+    LoginPage.clickOnLoginButton();
+    TopbarPage.assertLogoutButtonIsVisible();
+    AllQuotesPage.assertIsOpen();
+  }
+);
 
 Given("I am not logged in", () => {
   TopbarPage.assertLoginButtonIsVisible();
   TopbarPage.assertLogoutButtonIsNotVisible();
 });
 
-When("I enter my userId {int}", (userId: number) => {
-  LoginPage.enterUserId(userId);
+When("I enter the user email {string}", (email: string) => {
+  LoginPage.enterUserEmail(email);
+});
+
+When("I enter the user password {string}", (password: string) => {
+  LoginPage.enterUserPassword(password);
 });
 
 When("I click on login button", () => {

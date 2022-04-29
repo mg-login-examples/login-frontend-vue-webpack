@@ -5,10 +5,20 @@
     >
       <div>
         <input
-          v-model="userId"
+          v-model="userEmail"
+          placeholder="Email"
           type="text"
           class="m-4 p-2"
-          data-test="login--user-id-input"
+          data-test="login--user-email-input"
+        />
+      </div>
+      <div>
+        <input
+          v-model="userPassword"
+          type="text"
+          placeholder="Password"
+          class="m-4 p-2"
+          data-test="login--user-password-input"
         />
       </div>
       <div>
@@ -30,11 +40,15 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
 
 const router = useRouter();
-const userId = ref(0);
+const userEmail = ref("");
+const userPassword = ref("");
 
 const userStore = useUserStore();
 async function login() {
-  const isLoginSuccess = await userStore.login(userId.value);
+  const isLoginSuccess = await userStore.login(
+    userEmail.value,
+    userPassword.value
+  );
   if (isLoginSuccess) {
     router.push("/");
   }

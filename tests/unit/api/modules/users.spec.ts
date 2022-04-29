@@ -1,18 +1,36 @@
 jest.mock("@/api/modules/base");
 import usersApi from "@/api/modules/users";
 import http from "@/api/modules/base";
-import { fakeUser, mockAxiosGetUser } from "../../mocks/user";
+import {
+  fakeUserLogin,
+  fakeLoginResponse,
+  fakeUser,
+  mockAxiosLoginUser,
+  mockAxiosAuthenticateUser,
+} from "../../mocks/user";
 
-const mockedHttpGet = http.get as jest.Mock;
+const mockedHttpPost = http.post as jest.Mock;
 
 describe("Api module: Users", () => {
   beforeEach(() => {
-    mockedHttpGet.mockClear();
+    mockedHttpPost.mockClear();
   });
 
-  it("gets user by userId", async () => {
-    mockedHttpGet.mockImplementation(mockAxiosGetUser);
-    await expect(usersApi.getUser(fakeUser.id)).resolves.toEqual(fakeUser);
-    expect(http.get).toHaveBeenCalledWith(`/api/users/${fakeUser.id}/`);
+  it("login user with username and password", async () => {
+    mockedHttpPost.mockImplementation(mockAxiosLoginUser);
+    await expect(
+      usersApi.login(fakeUserLogin.email, fakeUserLogin.password)
+    ).resolves.toEqual(fakeLoginResponse);
+    expect(http.post).toHaveBeenCalledWith(
+      "/api/login/",
+      expect.anything(),
+      expect.anything()
+    );
+  });
+
+  it("authenticate user", async () => {
+    mockedHttpPost.mockImplementation(mockAxiosAuthenticateUser);
+    await expect(usersApi.authenticate()).resolves.toEqual(fakeUser);
+    expect(http.post).toHaveBeenCalledWith("/api/authenticate/");
   });
 });

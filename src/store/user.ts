@@ -13,9 +13,10 @@ export const useUserStore = defineStore("user", {
     user: null,
   }),
   actions: {
-    async login(userId: number): Promise<boolean> {
+    async login(userEmail: string, userPassword: string): Promise<boolean> {
       try {
-        this.user = await backendApi.users.getUser(userId);
+        await backendApi.users.login(userEmail, userPassword);
+        this.user = await backendApi.users.authenticate();
         return true;
       } catch (error) {
         const errorStore = useErrorsStore();
@@ -23,6 +24,10 @@ export const useUserStore = defineStore("user", {
         this.user = null;
         return false;
       }
+    },
+    async authenticate() {
+      this.user = await backendApi.users.authenticate();
+      return true;
     },
     logout() {
       this.user = null;
