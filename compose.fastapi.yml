@@ -23,7 +23,6 @@ services:
     secrets:
       - mysql-password
     environment:
-      - ENV_FILE=.test.env
       - DATABASE_URL=${DATABASE_URL:-mysql://root@mysql_db/login}
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}

@@ -1,5 +1,5 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
-import AdminAPIHelpers from "../dataHelpers/cywrap-api.helpers";
+import CyDataSetterHelpers from "../dataHelpers/cy-data-setter.helpers";
 import AllQuotesPage from "../pageObjects/all-quotes.page";
 
 import LoginPage from "../pageObjects/login.page";
@@ -12,7 +12,7 @@ Given("I go to login page", () => {
 Given(
   "I am logged in as a user with email {string} and password {string}",
   (email: string, password: string) => {
-    AdminAPIHelpers.createUserIfNoUserExists(email, password);
+    CyDataSetterHelpers.createUserIfNoUserExists(email, password);
     LoginPage.goToLoginPage();
     LoginPage.enterUserEmail(email);
     LoginPage.enterUserPassword(password);

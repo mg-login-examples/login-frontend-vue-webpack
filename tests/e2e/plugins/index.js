@@ -13,6 +13,7 @@ const cucumber = require("cypress-cucumber-preprocessor").default;
 const browserify = require("@cypress/browserify-preprocessor");
 const dotenvPlugin = require("cypress-dotenv");
 const allureWriter = require("@shelex/cypress-allure-plugin/writer");
+// const cypressLogToOutput = require("cypress-log-to-output");
 
 module.exports = (on, config) => {
   // on('file:preprocessor', webpack({
@@ -27,8 +28,10 @@ module.exports = (on, config) => {
 
   const configOptions = process.env.CYPRESS_ENV_FILE
     ? { path: process.env.CYPRESS_ENV_FILE }
-    : undefined;
+    : { path: ".env_cypress" };
   config = dotenvPlugin(config, configOptions);
+
+  // cypressLogToOutput.install(on);
 
   allureWriter(on, config); // Generate allure results from cypress results
 
