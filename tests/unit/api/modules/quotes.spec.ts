@@ -11,7 +11,7 @@ import {
 
 const mockedHttpGet = http.get as jest.Mock;
 
-describe("Api module: Quotes", () => {
+describe("api > modules > quotes.ts", () => {
   beforeEach(() => {
     mockedHttpGet.mockClear();
   });

@@ -10,6 +10,12 @@ const usersApi = {
     const response = await http.post("/api/login/", formData, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
+    const loginResponse: LoginResponse = <LoginResponse>response.data;
+    if (process.env.VUE_APP_CYPRESS_DOCKER) {
+      http.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${loginResponse.access_token}`;
+    }
     return <LoginResponse>response.data;
   },
   async authenticate(): Promise<User> {
