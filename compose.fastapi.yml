@@ -7,9 +7,6 @@ services:
     stdin_open: false # enables colored log # docker run -i
     build:
       context: ./backend/src/
-    profiles:
-      - fullstack
-      - fullstack-e2e
     networks:
       - backend
       - fullstack
@@ -26,6 +23,10 @@ services:
       - DATABASE_URL=${DATABASE_URL:-mysql://root@mysql_db/login}
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.login-backend.tls=true
+      - traefik.http.routers.login-backend.rule=Host("login-backend.localhost")
     # deploy:
     #   resources:
     #     limits:

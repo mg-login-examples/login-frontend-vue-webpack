@@ -16,9 +16,6 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
-    profiles:
-      - fullstack
-      - fullstack-e2e
     networks:
       - backend
     volumes:

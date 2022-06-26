@@ -2,8 +2,6 @@ version: '3.8'
 
 services:
   vueapp_test_e2e:
-    profiles:
-      - fullstack-e2e
     networks:
       - fullstack # internally connects to backend for e2e tests
     build:

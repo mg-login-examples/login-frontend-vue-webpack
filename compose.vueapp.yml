@@ -2,9 +2,6 @@ version: '3.8'
 
 services:
   vueapp_serve:
-    profiles:
-      - fullstack
-      - frontend-dev
     build:
       context: .
       target: serve-local-stage
@@ -14,11 +11,11 @@ services:
     ports:
       - 8019:8080
 
-  vueapp_serve_prod:
-    profiles:
-      - frontend-prod
-    build:
-      context: .
-      target: serve-prod-stage
-    ports:
-      - 8010:80
+  # vueapp_serve_prod:
+  #   profiles:
+  #     - frontend-prod
+  #   build:
+  #     context: .
+  #     target: serve-prod-stage
+  #   ports:
+  #     - 8010:80
