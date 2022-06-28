@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   traefik:
-    image: "traefik:v2.4"
-    container_name: "traefik"
+    image: "traefik:v2.6"
+    # container_name: "traefik"
     networks:
       - backend
       - fullstack
@@ -12,7 +12,9 @@ services:
      - "traefik.http.routers.traefik=true"
     ports:
       # HTTPS / SSL port
-      - "443:443"
+      # - "443:443"
+      - "8020:8020"
+      - "8021:8021"
       # The Traefik Web UI port (enabled by api:insecure: true in traefik.yml)
       - "8080:8080"
     volumes:

@@ -20,12 +20,16 @@ log:
   format: common
 
 entryPoints:
-  http:
-    address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: https
-          scheme: https
-  https:
-    address: ":443"
+  # http:
+  #   address: ":80"
+  #   http:
+  #     redirections:
+  #       entryPoint:
+  #         to: https
+  #         scheme: https
+  # https:
+  #   address: ":443"
+  backend_entrypoint:
+    address: ":8020"
+  frontend_entrypoint:
+    address: ":8021"

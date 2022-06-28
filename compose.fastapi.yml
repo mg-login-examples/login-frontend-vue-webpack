@@ -23,10 +23,15 @@ services:
       - DATABASE_URL=${DATABASE_URL:-mysql://root@mysql_db/login}
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8018/docs
+      timeout: 20s
+      retries: 10
     labels:
       - traefik.enable=true
-      - traefik.http.routers.login-backend.tls=true
-      - traefik.http.routers.login-backend.rule=Host("login-backend.localhost")
+      # - traefik.http.routers.login-backend.tls=true
+      - traefik.http.routers.login-backend.entrypoints=backend_entrypoint
+      - traefik.http.routers.login-backend.rule=Host("localhost")
     # deploy:
     #   resources:
     #     limits:
