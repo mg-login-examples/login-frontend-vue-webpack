@@ -30,6 +30,6 @@ entryPoints:
   # https:
   #   address: ":443"
   backend_entrypoint:
-    address: ":8020"
+    address: ":8028"
   frontend_entrypoint:
-    address: ":8021"
+    address: ":8029"

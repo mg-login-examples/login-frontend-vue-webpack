@@ -4,6 +4,7 @@ services:
   vueapp_test_e2e:
     networks:
       - fullstack # internally connects to backend for e2e tests
+      - backend # internally connects to backend for e2e tests
     build:
       context: .
       dockerfile: ./cypress.Dockerfile
