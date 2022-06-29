@@ -3,8 +3,7 @@ version: '3.8'
 services:
   vueapp_test_e2e:
     networks:
-      - fullstack # internally connects to backend for e2e tests
-      - backend # internally connects to backend for e2e tests
+      - fullstack
     build:
       context: .
       dockerfile: ./cypress.Dockerfile
@@ -14,8 +13,10 @@ services:
       # - CYPRESS_VERIFY_TIMEOUT=100000
       - CYPRESS_ENV_FILE=${CYPRESS_ENV_FILE}
     depends_on:
-      vueapp_serve:
+      fastapi:
         condition: service_healthy
+    #   vueapp_serve:
+    #     condition: service_healthy
     volumes:
       - ./src:/app/src
       - ./tests:/app/tests

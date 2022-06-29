@@ -26,6 +26,15 @@ module.exports = (on, config) => {
   };
   on("file:preprocessor", cucumber(options));
 
+  on("before:browser:launch", (browser = {}, launchOptions) => {
+    if (browser.name === "chrome") {
+      launchOptions.args.push(
+        "--disable-features=CookiesWithoutSameSiteMustBeSecure"
+      );
+    }
+    return launchOptions;
+  });
+
   const configOptions = process.env.CYPRESS_ENV_FILE
     ? { path: process.env.CYPRESS_ENV_FILE }
     : { path: ".env_cypress" };
