@@ -10,7 +10,7 @@ then
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend build
    export PRIMARY_DOMAIN="login-example.duckdns.org"
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend run -d --service-ports vueapp_serve npm run serve -- --mode ec2_main
+   docker-compose -f docker-compose.yml -f docker-compose.override.yml -f compose.vueapp.yml -p frontend run -d --service-ports vueapp_serve npm run serve -- --mode ec2_main
 elif [ $case = "launch-tdd" ]
 then
    # Stop all frontend project's containers, build vueapp container and run unit tests with watch
