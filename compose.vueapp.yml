@@ -10,6 +10,8 @@ services:
       - ./tests:/app/tests
     ports:
       - 8019:8080
+    networks:
+      - traefik-public
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`frontend.${PRIMARY_DOMAIN}`)"
