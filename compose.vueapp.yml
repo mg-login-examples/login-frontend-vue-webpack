@@ -12,10 +12,10 @@ services:
       - 8019:8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.my-app.rule=Host(`frontend.${PRIMARY_DOMAIN}`)"
-      - "traefik.http.routers.my-app.entrypoints=websecure"
-      - "traefik.http.routers.my-app.tls=true"
-      - "traefik.http.routers.my-app.tls.certresolver=le"
+      - "traefik.http.routers.frontend.rule=Host(`frontend.${PRIMARY_DOMAIN}`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend.tls.certresolver=le"
     # depends_on:
     #   fastapi:
     #     condition: service_healthy
