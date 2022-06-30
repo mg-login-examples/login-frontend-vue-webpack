@@ -4,3 +4,5 @@ networks:
   fullstack:
   backend:
   traefik-public:
+    name: traefik-public
+    external: true
