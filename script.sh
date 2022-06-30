@@ -42,6 +42,10 @@ then
    # Stop all frontend project's containers, build and run all frontend project's containers including backend
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend up --build
+elif [ $case = "down" ]
+then
+   # Stop all backend project's containers
+   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
 else
    echo "no option passed"
    echo "available options are:
