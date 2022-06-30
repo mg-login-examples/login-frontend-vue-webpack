@@ -9,6 +9,7 @@ elif [ $case = "launch-frontend-only-dev-env" ]
 then
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend build
+   export PRIMARY_DOMAIN="login-examples.duckdns.org"
    docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend run -d --service-ports vueapp_serve npm run serve -- --mode ec2_main
 elif [ $case = "launch-tdd" ]
 then
