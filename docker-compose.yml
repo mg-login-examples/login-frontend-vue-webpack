@@ -5,4 +5,3 @@ networks:
   backend:
   traefik-public:
     name: traefik-public
-    external: true
