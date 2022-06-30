@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  vueapp_serve:
+    build:
+      context: .
+      target: serve-local-stage
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+    ports:
+      - 8019:8080
+    # depends_on:
+    #   fastapi:
+    #     condition: service_healthy
+    # healthcheck:
+    #   test: wget --no-verbose --tries=1 --spider http://localhost:8080
+    #   timeout: 2s
+    #   retries: 10

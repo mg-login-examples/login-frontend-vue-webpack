@@ -22,11 +22,11 @@ CMD [ "npm", "run", "serve" ]
 
 # build stage
 FROM install-stage as build-stage
-RUN npm run build
-# TODO add env variable for --mode
+ARG VUE_MODE="production"
+RUN npm run build -- --mode ${VUE_MODE}
 
 # production stage
-FROM nginx:stable-alpine as serve-prod-stage
+FROM nginx:stable-alpine as serve-static-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

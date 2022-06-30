@@ -3,30 +3,30 @@ case=${1:-default}
 if [ $case = "launch-frontend-only-local" ]
 then
    # Stop all frontend project's containers and build and start vueapp container
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend up --build
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -p frontend up --build
 elif [ $case = "launch-frontend-only-dev-env" ]
 then
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend build
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    export PRIMARY_DOMAIN="login-example.duckdns.org"
-   docker-compose -f docker-compose.yml -f docker-compose.override.yml -f compose.vueapp.yml -p frontend run -d --service-ports vueapp_serve npm run serve -- --mode ec2_main
+   export VUE_MODE="cloud_dev"
+   docker-compose -f docker-compose.yml -f compose.vueapp_static.yml -p frontend up --build -d
 elif [ $case = "launch-tdd" ]
 then
    # Stop all frontend project's containers, build vueapp container and run unit tests with watch
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend build
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend run vueapp_serve npm run test:unit -- --watch
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -p frontend build
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -p frontend run vueapp_serve npm run test:unit -- --watch
 elif [ $case = "run-unit-tests" ]
 then
    # Stop all frontend project's containers, build vueapp container and run unit tests
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend build
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -p frontend run vueapp_serve npm run test:unit
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -p frontend build
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -p frontend run vueapp_serve npm run test:unit
 elif [ $case = "run-e2e-tests" ]
 then
    # Stop all frontend project's containers, build all frontend project's containers including backend and run e2e tests
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vuecypress.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend build
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py create_db_tables
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py add_admin_user test_admin@fakemail.com secretpwd
@@ -36,17 +36,17 @@ then
 elif [ $case = "launch-fullstack-local" ]
 then
    # Stop all frontend project's containers, build and run all frontend project's containers including backend
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend up --build
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend up --build
 elif [ $case = "launch-backend-only" ]
 then
    # Stop all frontend project's containers, build and run all frontend project's containers including backend
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend up --build
 elif [ $case = "down" ]
 then
    # Stop all backend project's containers
-   docker-compose -f docker-compose.yml -f compose.vueapp.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
 else
    echo "no option passed"
    echo "available options are:
