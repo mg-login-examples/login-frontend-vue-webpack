@@ -18,7 +18,7 @@ describe("api > modules > users.ts", () => {
 
   describe("> login()", () => {
     afterEach(() => {
-      process.env.VUE_APP_CYPRESS_DOCKER = undefined;
+      process.env.VUE_APP_ADD_AUTHORIZATION_HEADER = undefined;
     });
 
     it("makes an axios api POST call to login endpoint with username and password", async () => {
@@ -37,7 +37,7 @@ describe("api > modules > users.ts", () => {
     });
 
     it("stores the access token as an authorization header after login api call when CYPRESS_DOCKER environment variable is 1", async () => {
-      process.env.VUE_APP_CYPRESS_DOCKER = 1;
+      process.env.VUE_APP_ADD_AUTHORIZATION_HEADER = "true";
       mockedHttpPost.mockImplementation(mockAxiosLoginUser);
       await expect(
         usersApi.login(fakeUserLogin.email, fakeUserLogin.password)

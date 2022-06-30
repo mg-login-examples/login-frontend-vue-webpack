@@ -27,7 +27,7 @@ module.exports = (on, config) => {
   on("file:preprocessor", cucumber(options));
 
   on("before:browser:launch", (browser = {}, launchOptions) => {
-    if (browser.name === "chrome") {
+    if (browser.family === "chromium") {
       launchOptions.args.push(
         "--disable-features=CookiesWithoutSameSiteMustBeSecure"
       );

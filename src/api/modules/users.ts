@@ -11,7 +11,7 @@ const usersApi = {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
     const loginResponse: LoginResponse = <LoginResponse>response.data;
-    if (process.env.VUE_APP_CYPRESS_DOCKER) {
+    if (process.env.VUE_APP_ADD_AUTHORIZATION_HEADER === "true") {
       http.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${loginResponse.access_token}`;

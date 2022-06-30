@@ -27,11 +27,6 @@ services:
       test: wget --no-verbose --tries=1 --spider http://localhost:8018/docs
       timeout: 20s
       retries: 10
-    # labels:
-    #   - traefik.enable=true
-    #   # - traefik.http.routers.login-backend.tls=true
-    #   - traefik.http.routers.login-backend.entrypoints=backend_entrypoint
-    #   - traefik.http.routers.login-backend.rule=Host("localhost")
     # deploy:
     #   resources:
     #     limits:
