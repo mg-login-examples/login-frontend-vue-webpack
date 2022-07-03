@@ -1,11 +1,11 @@
 #!/bin/sh
 case=${1:-default}
-if [ $case = "launch-frontend-only-local" ]
+if [ $case = "launch-frontend-local" ]
 then
    # Stop all frontend project's containers and build and start vueapp container
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -p frontend up --build
-elif [ $case = "launch-frontend-only-dev-env" ]
+elif [ $case = "launch-frontend-cloud-dev" ]
 then
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    export PRIMARY_DOMAIN="login-example.duckdns.org"
@@ -38,11 +38,6 @@ then
    # Stop all frontend project's containers, build and run all frontend project's containers including backend
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend up --build
-elif [ $case = "launch-backend-only" ]
-then
-   # Stop all frontend project's containers, build and run all frontend project's containers including backend
-   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
-   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend up --build
 elif [ $case = "down" ]
 then
    # Stop all backend project's containers
@@ -50,9 +45,12 @@ then
 else
    echo "no option passed"
    echo "available options are:
-    - launch-frontend-only-local
-    - tdd
+    - launch-frontend-local
+    - launch-frontend-cloud-dev
+    - launch-tdd
     - run-unit-tests
     - run-e2e-tests
+    - launch-fullstack-local
+    - down
     "
 fi

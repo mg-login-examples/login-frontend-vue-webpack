@@ -98,4 +98,4 @@ jobs:
             cp frontend-vue-old/backend/db/mysql_pwd.txt frontend-vue/backend/db/ &&
             sudo rm -rf frontend-vue-old &&
             cd frontend-vue &&
-            ./script.sh launch-frontend-only-dev-env
+            ./script.sh launch-frontend-cloud-dev
