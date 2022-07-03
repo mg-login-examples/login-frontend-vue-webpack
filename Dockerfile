@@ -28,5 +28,7 @@ RUN npm run build -- --mode ${VUE_MODE}
 # production stage
 FROM nginx:stable-alpine as serve-static-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
