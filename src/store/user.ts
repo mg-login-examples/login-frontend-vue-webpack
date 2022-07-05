@@ -26,8 +26,13 @@ export const useUserStore = defineStore("user", {
       }
     },
     async authenticate() {
-      this.user = await backendApi.users.authenticate();
-      return true;
+      try {
+        this.user = await backendApi.users.authenticate();
+        return true;
+      } catch (error) {
+        this.user = null;
+        return false;
+      }
     },
     logout() {
       this.user = null;
