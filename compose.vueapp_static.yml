@@ -11,6 +11,7 @@ services:
       - 8010:80
     networks:
       - traefik-public
+    restart: always
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`frontend.${PRIMARY_DOMAIN}`)"

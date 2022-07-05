@@ -5,6 +5,7 @@ services:
     build:
       context: .
       target: serve-local-stage
+    restart: always
     volumes:
       - ./src:/app/src
       - ./tests:/app/tests
