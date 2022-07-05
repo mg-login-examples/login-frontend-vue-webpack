@@ -2,7 +2,8 @@
   <AppContainer>
     <AppTopbar />
     <AppMainContainer>
-      <router-view />
+      <router-view v-if="initAuth" />
+      <div data-test="app--connecting" v-if="!initAuth">Connecting...</div>
     </AppMainContainer>
   </AppContainer>
 </template>
@@ -12,6 +13,7 @@ import { Options, Vue } from "vue-class-component";
 import AppContainer from "@/components/generic/layout/AppContainer.vue";
 import AppMainContainer from "@/components/generic/layout/AppMainContainer.vue";
 import AppTopbar from "@/components/AppTopbar.vue";
+import { useUserStore } from "@/store/user";
 
 @Options({
   components: {
@@ -20,5 +22,17 @@ import AppTopbar from "@/components/AppTopbar.vue";
     AppTopbar,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  initAuth = false;
+  userStore = useUserStore();
+
+  mounted() {
+    this.authenticate();
+  }
+
+  async authenticate() {
+    await this.userStore.authenticate();
+    this.initAuth = true;
+  }
+}
 </script>
