@@ -31,7 +31,8 @@ then
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py create_db_tables
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py add_admin_user test_admin@fakemail.com secretpwd
    export CYPRESS_ENV_FILE=.env_cypress.ci_e2e
-   export CYPRESS_VIDEO=false
+   export CYPRESS_VIDEO=true
+   export SAMESITE=none
    docker-compose -f docker-compose.yml -f compose.vuecypress.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run vueapp_test_e2e npm run test:e2e -- --headless --mode ci_e2e --browser chrome
 elif [ $case = "launch-fullstack-local" ]
 then
