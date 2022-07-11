@@ -7,6 +7,7 @@ import {
   fakeUser,
   mockAxiosLoginUser,
   mockAxiosAuthenticateUser,
+  mockAxiosLogoutUser,
 } from "../../mocks/user";
 
 const mockedHttpPost = http.post as jest.Mock;
@@ -57,5 +58,11 @@ describe("api > modules > users.ts", () => {
     mockedHttpPost.mockImplementation(mockAxiosAuthenticateUser);
     await expect(usersApi.authenticate()).resolves.toEqual(fakeUser);
     expect(http.post).toHaveBeenCalledWith("/api/authenticate/");
+  });
+
+  it("logs out user", async () => {
+    mockedHttpPost.mockImplementation(mockAxiosLogoutUser);
+    await expect(usersApi.logout()).resolves.toEqual(undefined);
+    expect(http.post).toHaveBeenCalledWith("/api/logout/");
   });
 });

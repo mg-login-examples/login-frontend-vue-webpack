@@ -22,6 +22,9 @@ const usersApi = {
     const response = await http.post("/api/authenticate/");
     return <User>response.data;
   },
+  async logout(): Promise<void> {
+    await http.post("/api/logout/");
+  },
 };
 
 export default usersApi;

@@ -34,8 +34,17 @@ export const useUserStore = defineStore("user", {
         return false;
       }
     },
-    logout() {
-      this.user = null;
+    async logout() {
+      try {
+        await backendApi.users.logout();
+        this.user = null;
+        return true;
+      } catch (error) {
+        const errorStore = useErrorsStore();
+        errorStore.handleError(error);
+        this.user = null;
+        return false;
+      }
     },
   },
 });

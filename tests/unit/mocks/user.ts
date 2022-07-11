@@ -28,3 +28,5 @@ export const mockAxiosLoginUser = () =>
 
 export const mockAxiosAuthenticateUser = () =>
   Promise.resolve({ data: fakeUser });
+
+export const mockAxiosLogoutUser = () => Promise.resolve(null);
