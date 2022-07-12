@@ -34,19 +34,22 @@ describe("store > user.ts", () => {
     // invoke store login action
     const loginResponse = await userStore.login(
       fakeUserLogin.email,
-      fakeUserLogin.password
+      fakeUserLogin.password,
+      false
     );
     // assert success return
     expect(loginResponse).toBe(true);
     // assert api login function called
     expect(mockBackendApiLogin).toHaveBeenCalledWith(
       fakeUserLogin.email,
-      fakeUserLogin.password
+      fakeUserLogin.password,
+      false
     );
     // assert api authenticate function called
     expect(mockBackendApiLogin).toHaveBeenCalledWith(
       fakeUserLogin.email,
-      fakeUserLogin.password
+      fakeUserLogin.password,
+      false
     );
     // assert user returned
     expect(userStore.user).toStrictEqual(fakeUser);
@@ -61,7 +64,8 @@ describe("store > user.ts", () => {
     // invoke store login action
     const loginResponse = await userStore.login(
       fakeUserLogin.email,
-      fakeUserLogin.password
+      fakeUserLogin.password,
+      false
     );
     // assert failure return
     expect(loginResponse).toBe(false);
@@ -80,7 +84,8 @@ describe("store > user.ts", () => {
     // invoke store login action
     const loginResponse = await userStore.login(
       fakeUserLogin.email,
-      fakeUserLogin.password
+      fakeUserLogin.password,
+      false
     );
     // assert failure return
     expect(loginResponse).toBe(false);

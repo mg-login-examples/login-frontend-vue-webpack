@@ -1,6 +1,8 @@
 <template>
   <AppTopbarContainer>
-    <div class="flex h-full items-center bg-yellow-300">
+    <div
+      class="flex h-full items-center bg-gradient-to-r from-orange-300 to-rose-400"
+    >
       <font-awesome-icon icon="biohazard" class="px-4" />
       <router-link to="/" class="px-4" data-test="topbar--all-quotes-link">
         All Quotes

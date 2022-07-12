@@ -3,10 +3,15 @@ import { LoginResponse } from "@/models/login-response.model";
 import http from "./base";
 
 const usersApi = {
-  async login(userEmail: string, userPassword: string): Promise<LoginResponse> {
+  async login(
+    userEmail: string,
+    userPassword: string,
+    rememberMe: boolean
+  ): Promise<LoginResponse> {
     const formData = new FormData();
     formData.append("username", userEmail);
     formData.append("password", userPassword);
+    formData.append("remember_me", rememberMe.toString());
     const response = await http.post("/api/login/", formData, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });

@@ -13,9 +13,13 @@ export const useUserStore = defineStore("user", {
     user: null,
   }),
   actions: {
-    async login(userEmail: string, userPassword: string): Promise<boolean> {
+    async login(
+      userEmail: string,
+      userPassword: string,
+      rememberMe: boolean
+    ): Promise<boolean> {
       try {
-        await backendApi.users.login(userEmail, userPassword);
+        await backendApi.users.login(userEmail, userPassword, rememberMe);
         this.user = await backendApi.users.authenticate();
         return true;
       } catch (error) {

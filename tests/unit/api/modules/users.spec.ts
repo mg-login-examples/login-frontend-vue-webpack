@@ -25,7 +25,7 @@ describe("api > modules > users.ts", () => {
     it("makes an axios api POST call to login endpoint with username and password", async () => {
       mockedHttpPost.mockImplementation(mockAxiosLoginUser);
       await expect(
-        usersApi.login(fakeUserLogin.email, fakeUserLogin.password)
+        usersApi.login(fakeUserLogin.email, fakeUserLogin.password, false)
       ).resolves.toEqual(fakeLoginResponse);
       expect(http.post).toHaveBeenCalledWith(
         "/api/login/",
@@ -41,7 +41,7 @@ describe("api > modules > users.ts", () => {
       process.env.VUE_APP_ADD_AUTHORIZATION_HEADER = "true";
       mockedHttpPost.mockImplementation(mockAxiosLoginUser);
       await expect(
-        usersApi.login(fakeUserLogin.email, fakeUserLogin.password)
+        usersApi.login(fakeUserLogin.email, fakeUserLogin.password, false)
       ).resolves.toEqual(fakeLoginResponse);
       expect(http.post).toHaveBeenCalledWith(
         "/api/login/",
