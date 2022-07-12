@@ -35,8 +35,16 @@ When("I enter the user password {string}", (password: string) => {
   LoginPage.enterUserPassword(password);
 });
 
+When("I click on remember me", () => {
+  LoginPage.clickOnRememberMeCheckbox();
+});
+
 When("I click on login button", () => {
   LoginPage.clickOnLoginButton();
+});
+
+When("I click on toggle show password", () => {
+  LoginPage.clickOnShowPassword();
 });
 
 Then("login button is displayed on topbar", () => {
@@ -49,4 +57,12 @@ Then("login button is not displayed on topbar", () => {
 
 Then("I am redirected to login page", () => {
   LoginPage.assertIsOpen();
+});
+
+Then("the password text is hidden", () => {
+  LoginPage.assertPasswordInputIsOfTypePassword();
+});
+
+Then("the password text is visible", () => {
+  LoginPage.assertPasswordInputIsOfTypeText();
 });

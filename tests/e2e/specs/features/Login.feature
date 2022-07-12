@@ -5,6 +5,7 @@ Feature: Login
     When I go to login page
     And I enter the user email "me@fakemail.com"
     And I enter the user password "12345678"
+    And I click on remember me
     And I click on login button
     Then logout button is displayed on topbar
     And I am redirected to All Quotes page
@@ -17,3 +18,12 @@ Feature: Login
     And I click on login button
     Then logout button is not displayed on topbar
     And I am redirected to login page
+
+Scenario: Toggle show password text
+  Given I go to login page
+  When I enter the user password "some-password"
+  Then the password text is hidden
+  When I click on toggle show password
+  Then the password text is visible
+  When I click on toggle show password
+  Then the password text is hidden

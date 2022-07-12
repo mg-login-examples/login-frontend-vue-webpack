@@ -32,7 +32,6 @@
         <input
           type="checkbox"
           v-model="rememberMe"
-          class="bg-slate-200"
           data-test="login--remember-me-checkbox"
         />
         <div class="mx-2">Remember Me</div>
