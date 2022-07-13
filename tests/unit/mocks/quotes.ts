@@ -44,3 +44,10 @@ export const fakeUserQuotes: Quote[] = [fakeQuotes[0], fakeQuotes[1]];
 export const mockAxiosGetQuotes = () => Promise.resolve({ data: fakeQuotes });
 export const mockAxiosGetUserQuotes = () =>
   Promise.resolve({ data: fakeUserQuotes });
+
+export const mockAxiosPostUserQuote = () =>
+  Promise.resolve({ data: fakeQuote });
+
+export const mockAxiosDeleteUserQuote = () => {
+  Promise.resolve();
+};

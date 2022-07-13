@@ -8,7 +8,7 @@ import { useQuotesStore } from "@/store/quotes";
 import { useUserStore } from "@/store/user";
 import { useErrorsStore } from "@/store/errors";
 import backendApi from "@/api/backendApi";
-import { fakeQuotes, fakeUserQuotes } from "../mocks/quotes";
+import { fakeQuote, fakeQuotes, fakeUserQuotes } from "../mocks/quotes";
 import { fakeUser } from "../mocks/user";
 
 const mockErrorsStore = { handleError: jest.fn() };
@@ -16,6 +16,7 @@ const mockErrorsStore = { handleError: jest.fn() };
 const mockBackendApiGetQuotes = backendApi.quotes.getQuotes as jest.Mock;
 const mockBackendApiGetUserQuotes = backendApi.quotes
   .getUserQuotes as jest.Mock;
+const mockBackendApiCreateQuote = backendApi.quotes.createQuote as jest.Mock;
 
 const mockUserStore = { user: fakeUser };
 (useUserStore as unknown as jest.Mock).mockReturnValue(mockUserStore);
@@ -44,5 +45,27 @@ describe("store > quotes.ts", () => {
     await quotesStore.getUserQuotes();
     expect(mockBackendApiGetUserQuotes).toHaveBeenCalledWith(fakeUser.id);
     expect(quotesStore.userQuotes).toStrictEqual(fakeUserQuotes);
+  });
+
+  it("creates a user quote", async () => {
+    mockBackendApiCreateQuote.mockReturnValue(fakeQuote);
+    const quotesStore = useQuotesStore();
+    quotesStore.userQuotes = [...fakeQuotes];
+    await quotesStore.createUserQuote(fakeQuote.text);
+    expect(quotesStore.userQuotes.length).toBe(fakeQuotes.length + 1);
+    expect(quotesStore.userQuotes[quotesStore.userQuotes.length - 1]).toEqual(
+      fakeQuote
+    );
+  });
+
+  it("deletes a user quote", async () => {
+    const quotesStore = useQuotesStore();
+    quotesStore.userQuotes = [...fakeQuotes];
+    const quoteDelete = quotesStore.userQuotes[1];
+    await quotesStore.deleteUserQuote(quoteDelete.id);
+    expect(quotesStore.userQuotes.length).toBe(fakeQuotes.length - 1);
+    expect(
+      quotesStore.userQuotes.find((quote) => quote.id === quoteDelete.id)
+    ).toBe(undefined);
   });
 });
