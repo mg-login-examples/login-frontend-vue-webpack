@@ -1,6 +1,6 @@
 <template>
   <div class="h-full bg-white">
-    <div class="flex justify-center py-2">Quotes</div>
+    <div class="flex justify-center py-2 text-3xl">Quotes</div>
     <div class="flex flex-wrap p-2">
       <QuoteTile
         v-for="quote in quotesStore.quotes"

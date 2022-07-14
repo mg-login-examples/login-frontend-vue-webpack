@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="fixed top-0 z-50 w-full"
+      class="fixed top-0 z-5 w-full"
       :style="`height: ${topbarHeight ? topbarHeight : 50}px`"
     >
       <slot></slot>

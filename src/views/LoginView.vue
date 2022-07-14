@@ -16,6 +16,7 @@
         <button
           class="absolute w-6 right-4 top-0 bottom-0 m-auto h-6 opacity-60"
           @click="togglePasswordVisibility"
+          tabindex="-1"
           data-test="login--show-password-button"
         >
           <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
