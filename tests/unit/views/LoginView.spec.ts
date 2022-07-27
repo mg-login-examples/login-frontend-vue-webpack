@@ -81,6 +81,48 @@ describe("LoginView.vue", () => {
     expect(mockPush).toHaveBeenCalledWith("/");
   });
 
+  it("opens user requested route on successful user logins if redirected to login", async () => {
+    // init test values
+    const userEmail = "test@example.com";
+    const userPassword = "secretpassword";
+    // set prop user requested route to simulate router passing this value
+    const user_requested_route_before = "/my-quotes";
+    // open login view
+    const wrapper = mount(LoginView, {
+      global: {
+        plugins: [createTestingPinia()],
+        stubs: { FontAwesomeIcon: true },
+      },
+      props: { user_requested_route: user_requested_route_before },
+    });
+    // mock store login action to return login successful
+    const userStore = useUserStore();
+    (userStore.login as jest.Mock).mockReturnValue(true);
+    // enter user email
+    wrapper.find(selectors.usernameInputSelector).setValue(userEmail);
+    expect(
+      (
+        wrapper.find(selectors.usernameInputSelector)
+          .element as HTMLInputElement
+      ).value
+    ).toBe(userEmail);
+    // enter user password
+    wrapper.find(selectors.passwordInputSelector).setValue(userPassword);
+    expect(
+      (
+        wrapper.find(selectors.passwordInputSelector)
+          .element as HTMLInputElement
+      ).value
+    ).toBe(userPassword);
+    // click login
+    wrapper.find(selectors.submitButtonSelector).trigger("click");
+    await Vue.nextTick();
+    // assert user store login function called
+    expect(userStore.login).toBeCalledWith(userEmail, userPassword, false);
+    // assert router redirected to user requested route
+    expect(mockPush).toHaveBeenCalledWith(user_requested_route_before);
+  });
+
   it("handles failed user logins", async () => {
     // init test values
     const userEmail = "test@example.com";

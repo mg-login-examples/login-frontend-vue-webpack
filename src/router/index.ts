@@ -1,7 +1,6 @@
 import {
   createRouter,
   createWebHistory,
-  NavigationGuardNext,
   RouteLocationNormalized,
   RouteRecordRaw,
 } from "vue-router";
@@ -28,6 +27,7 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/login",
     name: "login",
     component: LoginView,
+    props: true,
   },
 ];
 
@@ -36,20 +36,22 @@ const router = createRouter({
   routes,
 });
 
-export function routerBeforeEachGuard(
+export async function routerBeforeEachGuard(
   to: RouteLocationNormalized,
-  _from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _from: RouteLocationNormalized
 ) {
+  const userStore = useUserStore();
+  if (!userStore.authAttemptedOnce) {
+    await userStore.authenticate();
+  }
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const userStore = useUserStore();
     if (!userStore.user) {
-      next({ name: "login" });
-    } else {
-      next();
+      return {
+        name: "login",
+        params: { user_requested_route: to.fullPath },
+      };
     }
-  } else {
-    next();
   }
 }
 

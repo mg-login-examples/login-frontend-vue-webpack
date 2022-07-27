@@ -5,11 +5,13 @@ import backendApi from "@/api/backendApi";
 import { useErrorsStore } from "./errors";
 
 interface UserState {
+  authAttemptedOnce: boolean;
   user: User | null;
 }
 
 export const useUserStore = defineStore("user", {
   state: (): UserState => ({
+    authAttemptedOnce: false,
     user: null,
   }),
   actions: {
@@ -32,11 +34,11 @@ export const useUserStore = defineStore("user", {
     async authenticate() {
       try {
         this.user = await backendApi.users.authenticate();
-        return true;
       } catch (error) {
         this.user = null;
-        return false;
       }
+      this.authAttemptedOnce = true;
+      return this.user != null;
     },
     async logout() {
       try {

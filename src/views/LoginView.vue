@@ -55,7 +55,12 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
 
+const props = defineProps<{
+  user_requested_route?: string;
+}>();
+
 const router = useRouter();
+
 const userEmail = ref("");
 const userPassword = ref("");
 const rememberMe = ref(false);
@@ -70,7 +75,11 @@ async function login() {
     rememberMe.value
   );
   if (isLoginSuccess) {
-    router.push("/");
+    if (props.user_requested_route) {
+      router.push(props.user_requested_route as string);
+    } else {
+      router.push("/");
+    }
   }
 }
 

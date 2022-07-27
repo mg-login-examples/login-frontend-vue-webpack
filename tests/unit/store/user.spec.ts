@@ -96,7 +96,7 @@ describe("store > user.ts", () => {
   });
 
   it("authenticates user", async () => {
-    // mock login api to return user
+    // mock authenticate api to return user
     mockBackendApiAuthenticate.mockReturnValue(fakeUser);
     // init user store
     const userStore = useUserStore();
