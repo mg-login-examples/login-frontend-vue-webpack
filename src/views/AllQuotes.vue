@@ -1,6 +1,8 @@
 <template>
   <div class="h-full bg-white">
-    <div class="flex justify-center py-2 text-3xl">Quotes</div>
+    <div class="relative">
+      <div class="flex justify-center py-4 text-3xl">Quotes</div>
+    </div>
     <div class="flex flex-wrap p-2">
       <QuoteTile
         v-for="quote in quotesStore.quotes"
@@ -13,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import QuoteTile from "@/components/QuoteTile.vue";
+import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import { useQuotesStore } from "@/store/quotes";
 
 const quotesStore = useQuotesStore();

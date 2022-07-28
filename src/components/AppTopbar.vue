@@ -54,7 +54,7 @@ function logout() {
 </script>
 
 <style scoped>
-.router-link-exact-active {
+.router-link-active {
   font-weight: bold;
 }
 </style>

@@ -13,13 +13,13 @@ jest.mock("vue-router", () => ({
 }));
 
 const selectors = {
-  usernameInputSelector: "[data-test='login--user-email-input']",
-  passwordInputSelector: "[data-test='login--user-password-input']",
-  showPasswordButtonSelector: "[data-test='login--show-password-button']",
-  showPasswordIconSelector:
+  usernameInput: "[data-test='login--user-email-input']",
+  passwordInput: "[data-test='login--user-password-input']",
+  showPasswordButton: "[data-test='login--show-password-button']",
+  showPasswordIcon:
     "[data-test='login--show-password-button'] font-awesome-icon-stub",
-  rememberMeCheckboxSelector: "[data-test='login--remember-me-checkbox']",
-  submitButtonSelector: "[data-test='login--submit-button']",
+  rememberMeCheckbox: "[data-test='login--remember-me-checkbox']",
+  submitButton: "[data-test='login--submit-button']",
 };
 
 describe("LoginView.vue", () => {
@@ -42,38 +42,28 @@ describe("LoginView.vue", () => {
     const userStore = useUserStore();
     (userStore.login as jest.Mock).mockReturnValue(true);
     // enter user email
-    wrapper.find(selectors.usernameInputSelector).setValue(userEmail);
+    wrapper.find(selectors.usernameInput).setValue(userEmail);
     expect(
-      (
-        wrapper.find(selectors.usernameInputSelector)
-          .element as HTMLInputElement
-      ).value
+      (wrapper.find(selectors.usernameInput).element as HTMLInputElement).value
     ).toBe(userEmail);
     // enter user password
-    wrapper.find(selectors.passwordInputSelector).setValue(userPassword);
+    wrapper.find(selectors.passwordInput).setValue(userPassword);
     expect(
-      (
-        wrapper.find(selectors.passwordInputSelector)
-          .element as HTMLInputElement
-      ).value
+      (wrapper.find(selectors.passwordInput).element as HTMLInputElement).value
     ).toBe(userPassword);
     // assert remember me is false by default
     expect(
-      (
-        wrapper.find(selectors.rememberMeCheckboxSelector)
-          .element as HTMLInputElement
-      ).checked
+      (wrapper.find(selectors.rememberMeCheckbox).element as HTMLInputElement)
+        .checked
     ).toBe(false);
     // set remember me to true
-    wrapper.find(selectors.rememberMeCheckboxSelector).setValue(true);
+    wrapper.find(selectors.rememberMeCheckbox).setValue(true);
     expect(
-      (
-        wrapper.find(selectors.rememberMeCheckboxSelector)
-          .element as HTMLInputElement
-      ).checked
+      (wrapper.find(selectors.rememberMeCheckbox).element as HTMLInputElement)
+        .checked
     ).toBe(true);
     // click login
-    wrapper.find(selectors.submitButtonSelector).trigger("click");
+    wrapper.find(selectors.submitButton).trigger("click");
     await Vue.nextTick();
     // assert user store login function called
     expect(userStore.login).toBeCalledWith(userEmail, userPassword, true);
@@ -99,23 +89,17 @@ describe("LoginView.vue", () => {
     const userStore = useUserStore();
     (userStore.login as jest.Mock).mockReturnValue(true);
     // enter user email
-    wrapper.find(selectors.usernameInputSelector).setValue(userEmail);
+    wrapper.find(selectors.usernameInput).setValue(userEmail);
     expect(
-      (
-        wrapper.find(selectors.usernameInputSelector)
-          .element as HTMLInputElement
-      ).value
+      (wrapper.find(selectors.usernameInput).element as HTMLInputElement).value
     ).toBe(userEmail);
     // enter user password
-    wrapper.find(selectors.passwordInputSelector).setValue(userPassword);
+    wrapper.find(selectors.passwordInput).setValue(userPassword);
     expect(
-      (
-        wrapper.find(selectors.passwordInputSelector)
-          .element as HTMLInputElement
-      ).value
+      (wrapper.find(selectors.passwordInput).element as HTMLInputElement).value
     ).toBe(userPassword);
     // click login
-    wrapper.find(selectors.submitButtonSelector).trigger("click");
+    wrapper.find(selectors.submitButton).trigger("click");
     await Vue.nextTick();
     // assert user store login function called
     expect(userStore.login).toBeCalledWith(userEmail, userPassword, false);
@@ -138,23 +122,17 @@ describe("LoginView.vue", () => {
     const userStore = useUserStore();
     (userStore.login as jest.Mock).mockReturnValue(false);
     // enter user email
-    wrapper.find(selectors.usernameInputSelector).setValue(userEmail);
+    wrapper.find(selectors.usernameInput).setValue(userEmail);
     expect(
-      (
-        wrapper.find(selectors.usernameInputSelector)
-          .element as HTMLInputElement
-      ).value
+      (wrapper.find(selectors.usernameInput).element as HTMLInputElement).value
     ).toBe(userEmail);
     // enter user password
-    wrapper.find(selectors.passwordInputSelector).setValue(userPassword);
+    wrapper.find(selectors.passwordInput).setValue(userPassword);
     expect(
-      (
-        wrapper.find(selectors.passwordInputSelector)
-          .element as HTMLInputElement
-      ).value
+      (wrapper.find(selectors.passwordInput).element as HTMLInputElement).value
     ).toBe(userPassword);
     // click login
-    wrapper.find(selectors.submitButtonSelector).trigger("click");
+    wrapper.find(selectors.submitButton).trigger("click");
     await Vue.nextTick();
     // assert user store login function called
     expect(userStore.login).toBeCalledWith(userEmail, userPassword, false);
@@ -172,29 +150,26 @@ describe("LoginView.vue", () => {
       },
     });
     // enter password
-    wrapper.find(selectors.passwordInputSelector).setValue(userPassword);
+    wrapper.find(selectors.passwordInput).setValue(userPassword);
     expect(
-      (
-        wrapper.find(selectors.passwordInputSelector)
-          .element as HTMLInputElement
-      ).value
+      (wrapper.find(selectors.passwordInput).element as HTMLInputElement).value
     ).toBe(userPassword);
     // assert password not visible by default
-    expect(
-      wrapper.find(selectors.passwordInputSelector).attributes("type")
-    ).toBe("password");
-    expect(
-      wrapper.find(selectors.showPasswordIconSelector).attributes("icon")
-    ).toBe("eye");
+    expect(wrapper.find(selectors.passwordInput).attributes("type")).toBe(
+      "password"
+    );
+    expect(wrapper.find(selectors.showPasswordIcon).attributes("icon")).toBe(
+      "eye"
+    );
     // show password
-    wrapper.find(selectors.showPasswordButtonSelector).trigger("click");
+    wrapper.find(selectors.showPasswordButton).trigger("click");
     await Vue.nextTick();
     // assert password visible
-    expect(
-      wrapper.find(selectors.passwordInputSelector).attributes("type")
-    ).toBe("text");
-    expect(
-      wrapper.find(selectors.showPasswordIconSelector).attributes("icon")
-    ).toBe("eye-slash");
+    expect(wrapper.find(selectors.passwordInput).attributes("type")).toBe(
+      "text"
+    );
+    expect(wrapper.find(selectors.showPasswordIcon).attributes("icon")).toBe(
+      "eye-slash"
+    );
   });
 });

@@ -3,7 +3,7 @@ import { mount } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
 
 import AllQuotes from "@/views/AllQuotes.vue";
-import QuoteTile from "@/components/QuoteTile.vue";
+import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import { useQuotesStore } from "@/store/quotes";
 import { fakeQuotes } from "../mocks/quotes";
 

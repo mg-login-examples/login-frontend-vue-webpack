@@ -1,7 +1,7 @@
 import * as Vue from "vue";
 import { mount } from "@vue/test-utils";
 
-import QuoteTile from "@/components/QuoteTile.vue";
+import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import { fakeQuote } from "../mocks/quotes";
 
 describe("components > QuoteTile.vue", () => {
