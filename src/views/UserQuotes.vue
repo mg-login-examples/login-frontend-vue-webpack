@@ -6,7 +6,7 @@
         <button
           class="mr-4 px-4 py-2 flex bg-rose-300 justify-center items-center"
           @click="showCreateQuoteModal = true"
-          data-test="user-quote--open-create-quote-dialog-button"
+          data-test="user-quote--open-create-quote-modal-button"
         >
           <span v-if="windowInnerWidth >= 400">Create</span>
           <font-awesome-icon v-if="windowInnerWidth < 400" icon="plus" />

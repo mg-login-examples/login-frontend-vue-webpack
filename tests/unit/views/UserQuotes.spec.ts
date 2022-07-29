@@ -9,8 +9,7 @@ import { useQuotesStore } from "@/store/quotes";
 import { fakeQuotes } from "../mocks/quotes";
 
 const selectors = {
-  createQuoteButton:
-    "[data-test='user-quote--open-create-quote-dialog-button']",
+  createQuoteButton: "[data-test='user-quote--open-create-quote-modal-button']",
 };
 
 describe("UserQuotes.vue", () => {

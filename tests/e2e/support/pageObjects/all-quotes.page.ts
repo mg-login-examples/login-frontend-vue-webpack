@@ -4,13 +4,16 @@ export default class AllQuotesPage {
   static open() {
     cy.visit("/");
   }
+
   static assertIsOpen() {
     cy.url().should("eq", Cypress.config().baseUrl);
   }
+
   static goToAllQuotesPage() {
     this.open();
     this.assertIsOpen();
   }
+
   static assertSomeQuoteIsVisible() {
     cy.get(this.quoteTile).should("be.visible");
   }

@@ -12,3 +12,15 @@ Feature: My Quotes
     And I am not logged in
     When I try to open my quotes view
     Then I am redirected to login page
+
+  Scenario: Create a new quote
+    Given I am logged in as a user with email "my_quotes_test@fakemail.com" and password "12345678"
+    When I click on my quotes button in topbar
+    And I click on create new quote button
+    Then create new quote modal is visible
+    And quote input has text ""
+    And save button is disabled
+    When I enter some quote "a new quote"
+    And I click on save button
+    Then create new quote modal is not visible
+    And a quote "a new quote" is visible in my quotes

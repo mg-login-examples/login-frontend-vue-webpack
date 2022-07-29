@@ -19,11 +19,20 @@ Feature: Login
     Then logout button is not displayed on topbar
     And I am redirected to login page
 
-Scenario: Toggle show password text
-  Given I go to login page
-  When I enter the user password "some-password"
-  Then the password text is hidden
-  When I click on toggle show password
-  Then the password text is visible
-  When I click on toggle show password
-  Then the password text is hidden
+  Scenario: Toggle show password text
+    Given I go to login page
+    When I enter the user password "some-password"
+    Then the password text is hidden
+    When I click on toggle show password
+    Then the password text is visible
+    When I click on toggle show password
+    Then the password text is hidden
+
+  Scenario: Redirect to login page, and after login, redirect to requested page
+    Given a user with email "me@fakemail.com" and password "12345678" exists
+    And I try to open my quotes view
+    Then I am redirected to login page
+    And I enter the user email "me@fakemail.com"
+    And I enter the user password "12345678"
+    And I click on login button
+    Then I am redirected to My Quotes page
