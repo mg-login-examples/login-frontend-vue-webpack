@@ -16,7 +16,7 @@
       </router-link>
       <div class="flex-grow"></div>
       <router-link
-        v-if="!userStore.user"
+        v-if="!userStore.user && userStore.authAttemptedOnce"
         to="/login"
         class="px-4"
         data-test="topbar--login-link"
