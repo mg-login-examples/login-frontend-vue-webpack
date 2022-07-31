@@ -1,10 +1,6 @@
-import { When, Then, Given } from "cypress-cucumber-preprocessor/steps";
+import { When, Then } from "cypress-cucumber-preprocessor/steps";
 
 import TopbarPage from "../pageObjects/topbar.page";
-
-Given("my login session is cleared", () => {
-  cy.clearCookies();
-});
 
 When("I click on logout button", () => {
   TopbarPage.clickOnLogoutButton();

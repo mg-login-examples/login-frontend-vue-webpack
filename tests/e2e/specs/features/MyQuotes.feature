@@ -8,7 +8,6 @@ Feature: My Quotes
     Then I see a quote
 
   Scenario: When opening my quotes page, redirect to login if not logged in
-    Given my login session is cleared
     And I am on all quotes view
     When I try to open my quotes view
     Then I am redirected to login page

@@ -1,6 +1,14 @@
-import { Given } from "cypress-cucumber-preprocessor/steps";
+import { Given, Before } from "cypress-cucumber-preprocessor/steps";
 
 import CyDataSetterHelpers from "../dataHelpers/cy-data-setter.helpers";
+
+Before(() => {
+  cy.visit("/");
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  cy.clearCookies({ domain: null });
+  cy.reload();
+});
 
 Given(
   "a user with email {string} and password {string} exists",

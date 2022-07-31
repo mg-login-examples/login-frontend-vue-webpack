@@ -2,7 +2,6 @@ Feature: Login
 
   Scenario: Login with valid user
     Given a user with email "me@fakemail.com" and password "12345678" exists
-    And my login session is cleared
     When I go to login page
     And I enter the user email "me@fakemail.com"
     And I enter the user password "12345678"
@@ -31,7 +30,6 @@ Feature: Login
 
   Scenario: Redirect to login page, and after login, redirect to requested page
     Given a user with email "me@fakemail.com" and password "12345678" exists
-    And my login session is cleared
     And I try to open my quotes view
     Then I am redirected to login page
     And I enter the user email "me@fakemail.com"
