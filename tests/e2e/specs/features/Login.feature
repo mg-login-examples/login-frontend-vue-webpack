@@ -28,6 +28,7 @@ Feature: Login
     When I click on toggle show password
     Then the password text is hidden
 
+  # @example-tag
   Scenario: Redirect to login page, and after login, redirect to requested page
     Given a user with email "me@fakemail.com" and password "12345678" exists
     And I try to open my quotes view
