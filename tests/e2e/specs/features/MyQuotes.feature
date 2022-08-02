@@ -14,12 +14,25 @@ Feature: My Quotes
 
   Scenario: Create a new quote
     Given I am logged in as a user with email "my_quotes_test@fakemail.com" and password "12345678"
-    When I click on my quotes button in topbar
+    When I open my quotes view
     And I click on create new quote button
-    Then create new quote modal is visible
+    Then create new quote modal is open
     And quote input has text ""
     And save button is disabled
     When I enter some quote "a new quote"
     And I click on save button
-    Then create new quote modal is not visible
+    Then create new quote modal is closed
     And a quote "a new quote" is visible in my quotes
+
+  Scenario: Delete a quote
+    Given I am logged in as a user with email "my_quotes_test@fakemail.com" and password "12345678"
+    And I have created a quote "quote to be deleted"
+    And I open my quotes view
+    When I hover on the quote with text "quote to be deleted"
+    Then the delete button for the quote with text "quote to be deleted" is visible
+    When I click on delete button for the quote with text "quote to be deleted"
+    Then the delete quote modal is open
+    And the quote to delete with text "quote to be deleted" is visible
+    When I click on delete button in the delete quote modal
+    Then the delete quote modal is closed
+    And the quote with text "quote to be deleted" is deleted

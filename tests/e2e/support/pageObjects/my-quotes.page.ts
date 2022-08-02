@@ -4,6 +4,8 @@ export default class MyQuotesPage {
   static readonly quoteTile = "[data-test='quote-tile']";
   static readonly openCreateQuoteModalButton =
     "[data-test='user-quote--open-create-quote-modal-button']";
+  static readonly deleteQuoteButton =
+    "[data-test='quote-tile--delete-quote-button']";
 
   static open() {
     cy.visit(`/${this.urlPath}`);
@@ -28,5 +30,23 @@ export default class MyQuotesPage {
 
   static assertQuoteWithTextIsVisible(quoteText: string) {
     cy.get(this.quoteTile).contains(quoteText).should("be.visible");
+  }
+
+  static assertQuoteWithTextIsNotVisible(quoteText: string) {
+    cy.get(this.quoteTile).contains(quoteText).should("not.exist");
+  }
+
+  static hoverOnQuoteTileWithText(quoteText: string) {
+    cy.get(this.quoteTile).contains(quoteText).trigger("mouseover");
+  }
+
+  static clickOnDeleteButtonOfQuoteTileWithText(quoteText: string) {
+    cy.contains(this.quoteTile, quoteText).find(this.deleteQuoteButton).click();
+  }
+
+  static assertDeleteQuoteButtonIsVisibleOnQuoteTileWithText(
+    quoteText: string
+  ) {
+    cy.contains(this.quoteTile, quoteText).find(this.deleteQuoteButton);
   }
 }

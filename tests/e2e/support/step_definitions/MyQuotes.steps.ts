@@ -19,6 +19,17 @@ Then("I am redirected to My Quotes page", () => {
   MyQuotesPage.assertIsOpen();
 });
 
-Then("a quote {string} is visible in my quotes", (myQuoteText: string) => {
-  MyQuotesPage.assertQuoteWithTextIsVisible(myQuoteText);
+Then("a quote {string} is visible in my quotes", (quoteText: string) => {
+  MyQuotesPage.assertQuoteWithTextIsVisible(quoteText);
 });
+
+When("I hover on the quote with text {string}", (quoteText: string) => {
+  MyQuotesPage.hoverOnQuoteTileWithText(quoteText);
+});
+
+Then(
+  "the delete button for the quote with text {string} is visible",
+  (quoteText: string) => {
+    MyQuotesPage.assertDeleteQuoteButtonIsVisibleOnQuoteTileWithText(quoteText);
+  }
+);
