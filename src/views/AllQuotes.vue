@@ -8,6 +8,7 @@
         v-for="quote in quotesStore.quotes"
         :key="quote.id"
         :quote="quote"
+        :myQuote="false"
         class="m-2"
       />
     </div>

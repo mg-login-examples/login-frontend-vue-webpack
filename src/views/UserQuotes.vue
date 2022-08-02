@@ -18,8 +18,9 @@
         v-for="quote in quotesStore.userQuotes"
         :key="quote.id"
         :quote="quote"
-        :background="'my-quotes'"
+        :myQuote="true"
         class="m-2"
+        @deleteQuote="getDeleteQuoteConfirmation"
       />
     </div>
     <AppModal v-model="showCreateQuoteModal" class="bg-white">
@@ -27,6 +28,13 @@
         @saveQuote="createQuote"
         @cancelCreateQuote="showCreateQuoteModal = false"
       ></QuoteCreate>
+    </AppModal>
+    <AppModal v-model="showDeleteQuoteModal" class="bg-white">
+      <QuoteDelete
+        :quote="quoteToDelete"
+        @deleteQuote="deleteQuote"
+        @cancelDeleteQuote="showDeleteQuoteModal = false"
+      ></QuoteDelete>
     </AppModal>
   </div>
 </template>
@@ -37,12 +45,15 @@ import { ref, onUnmounted } from "vue";
 import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import AppModal from "@/components/generic/modal/AppModal.vue";
 import QuoteCreate from "@/components/Quotes/QuoteCreate.vue";
+import QuoteDelete from "@/components/Quotes/QuoteDelete.vue";
 import { useQuotesStore } from "@/store/quotes";
+import { Quote } from "@/models/quote.model";
 
 const quotesStore = useQuotesStore();
 
 quotesStore.getUserQuotes();
 
+// Create quote
 const showCreateQuoteModal = ref(false);
 
 async function createQuote(quoteText: string) {
@@ -50,6 +61,22 @@ async function createQuote(quoteText: string) {
   showCreateQuoteModal.value = false;
 }
 
+// Delete quote
+const showDeleteQuoteModal = ref(false);
+const quoteToDelete = ref<Quote | undefined>(undefined);
+
+async function getDeleteQuoteConfirmation(quoteId: number) {
+  quoteToDelete.value = quotesStore.userQuoteById(quoteId);
+  showDeleteQuoteModal.value = true;
+}
+async function deleteQuote(quoteId: number | undefined) {
+  if (quoteId) {
+    await quotesStore.deleteUserQuote(quoteId as number);
+  }
+  showDeleteQuoteModal.value = false;
+}
+
+// window resize listener
 const windowInnerWidth = ref(window.innerWidth);
 function updateWindowInnerWidth() {
   windowInnerWidth.value = window.innerWidth;

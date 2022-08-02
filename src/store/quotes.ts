@@ -16,6 +16,12 @@ export const useQuotesStore = defineStore("quotes", {
     quotes: [],
     userQuotes: [],
   }),
+  getters: {
+    userQuoteById: (state) => {
+      return (quoteId: number) =>
+        state.userQuotes.find((quote) => quote.id === quoteId);
+    },
+  },
   actions: {
     async getQuotes() {
       try {

@@ -29,6 +29,15 @@ describe("store > quotes.ts", () => {
     mockErrorsStore.handleError.mockClear();
   });
 
+  it("returns a user quote by id", () => {
+    const quotesStore = useQuotesStore();
+    quotesStore.userQuotes = fakeUserQuotes;
+    const expectedQuote = fakeUserQuotes[1];
+    expect(quotesStore.userQuoteById(expectedQuote.id)).toEqual(expectedQuote);
+    const nonExistentQuoteId = 3394;
+    expect(quotesStore.userQuoteById(nonExistentQuoteId)).toEqual(undefined);
+  });
+
   it("gets quotes", async () => {
     mockBackendApiGetQuotes.mockReturnValue(fakeQuotes);
     const quotesStore = useQuotesStore();
