@@ -54,13 +54,17 @@ describe("components > generic > modal > AppModal.vue", () => {
     await Vue.nextTick();
     // assert modal is not closed
     expect(wrapper.findComponent(AppModalContent).exists()).toBe(true);
+    // assert parent of focus element is transition element, automatically stubbed by vue-test-utils
+    expect(
+      appModalContentWrapper.element.parentElement.parentElement.tagName
+    ).toBe("TRANSITION-STUB");
     // get modal's root background element and click
     expect(
-      appModalContentWrapper.element.parentElement.parentElement.getAttribute(
+      appModalContentWrapper.element.parentElement.parentElement.parentElement.getAttribute(
         "data-test"
       )
     ).toBe("modal--background");
-    appModalContentWrapper.element.parentElement.parentElement.click();
+    appModalContentWrapper.element.parentElement.parentElement.parentElement.click();
     await Vue.nextTick();
     // assert modal is closed
     expect(wrapper.findComponent(AppModalContent).exists()).toBe(false);

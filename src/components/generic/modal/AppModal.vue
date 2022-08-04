@@ -7,14 +7,24 @@
       @click="closeModal"
       data-test="modal--background"
     >
-      <div
-        ref="modal"
-        @click.stop=""
-        v-bind="$attrs"
-        data-test="modal--focus-element-wrapper"
+      <transition
+        appear
+        enter-active-class="transition ease-out duration-300 transform "
+        enter-from-class="opacity-0 translate-y-10 scale-95"
+        enter-to-class="opacity-100 translate-y-0 scale-100"
+        leave-active-class="ease-in duration-200"
+        leave-from-class="opacity-100 translate-y-0 scale-100"
+        leave-to-class="opacity-0 translate-y-10 translate-y-0 scale-95"
       >
-        <slot></slot>
-      </div>
+        <div
+          ref="modal"
+          @click.stop=""
+          v-bind="$attrs"
+          data-test="modal--focus-element-wrapper"
+        >
+          <slot></slot>
+        </div>
+      </transition>
     </div>
   </Teleport>
 </template>
