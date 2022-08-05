@@ -1,6 +1,11 @@
 <template>
   <div class="p-4 bg-white w-96">
-    <div class="flex justify-center my-4 text-2xl">Write A Quote</div>
+    <div
+      class="flex justify-center my-4 text-2xl"
+      data-test="user-quote--create-edit-quote--title"
+    >
+      {{ quote ? "Edit Quote" : "Write A Quote" }}
+    </div>
     <div class="my-4">
       <textarea
         v-model="quoteText"
@@ -32,16 +37,28 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+import { Quote } from "@/models/quote.model";
+
+const props = defineProps<{
+  quote?: Quote;
+}>();
+
 const quoteText = ref("");
 
 function save() {
-  emit("saveQuote", quoteText.value);
+  if (props.quote) {
+    const quoteEdited: Quote = { ...props.quote, text: quoteText.value };
+    emit("editQuote", quoteEdited);
+  } else {
+    emit("createQuote", quoteText.value);
+  }
 }
 function cancel() {
-  emit("cancelCreateQuote");
+  emit("cancel");
 }
 const emit = defineEmits<{
-  (e: "saveQuote", quoteText: string): void;
-  (e: "cancelCreateQuote"): void;
+  (e: "createQuote", quoteText: string): void;
+  (e: "editQuote", quote: Quote): void;
+  (e: "cancel"): void;
 }>();
 </script>

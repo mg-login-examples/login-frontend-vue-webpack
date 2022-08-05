@@ -3,6 +3,8 @@ jest.mock("@/api/backendApi");
 jest.mock("@/store/user");
 
 import { setActivePinia, createPinia } from "pinia";
+import minifaker from "minifaker";
+import "minifaker/dist/cjs/locales/en";
 
 import { useQuotesStore } from "@/store/quotes";
 import { useUserStore } from "@/store/user";
@@ -65,6 +67,22 @@ describe("store > quotes.ts", () => {
     expect(quotesStore.userQuotes[quotesStore.userQuotes.length - 1]).toEqual(
       fakeQuote
     );
+  });
+
+  it("edits a user quote", async () => {
+    const quotesStore = useQuotesStore();
+    quotesStore.userQuotes = [...fakeQuotes];
+    const quoteEdit = quotesStore.userQuotes[1];
+    const originalQuoteText = quoteEdit.text;
+    quoteEdit.text = minifaker.array(10, () => minifaker.word()).join();
+    await quotesStore.editUserQuote(quoteEdit);
+    expect(quotesStore.userQuotes.length).toBe(fakeQuotes.length);
+    expect(
+      quotesStore.userQuotes.find((quote) => quote.id === quoteEdit.id)?.text
+    ).toBe(quoteEdit.text);
+    expect(
+      quotesStore.userQuotes.find((quote) => quote.id === quoteEdit.id)?.text
+    ).not.toBe(originalQuoteText);
   });
 
   it("deletes a user quote", async () => {

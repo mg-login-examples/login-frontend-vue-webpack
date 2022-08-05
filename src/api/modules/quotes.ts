@@ -15,6 +15,9 @@ const quotesApi = {
     const response = await http.post(`/api/quotes/`, quoteCreate);
     return <Quote>response.data;
   },
+  async editQuote(quoteEdit: Quote) {
+    await http.put(`/api/quotes/${quoteEdit.id}`, quoteEdit);
+  },
   async deleteQuote(quoteId: number) {
     await http.delete(`/api/quotes/${quoteId}/`);
   },

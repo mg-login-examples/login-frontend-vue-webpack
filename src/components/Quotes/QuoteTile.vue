@@ -11,6 +11,16 @@
     <div data-test="quote-tile--text">
       {{ quote.text }}
     </div>
+    <div class="absolute left-0 bottom-0">
+      <button
+        v-if="myQuote && tileHover"
+        @click="editQuote"
+        class="m-4"
+        data-test="quote-tile--edit-quote-button"
+      >
+        <font-awesome-icon icon="pencil" />
+      </button>
+    </div>
     <div class="absolute right-0 bottom-0">
       <button
         v-if="myQuote && tileHover"
@@ -35,11 +45,16 @@ const props = defineProps<{
 
 const tileHover = ref(false);
 
+function editQuote() {
+  emit("editQuote", props.quote.id);
+}
+
 function deleteQuote() {
   emit("deleteQuote", props.quote.id);
 }
 
 const emit = defineEmits<{
   (e: "deleteQuote", quoteId: number): void;
+  (e: "editQuote", quoteId: number): void;
 }>();
 </script>

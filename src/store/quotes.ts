@@ -65,6 +65,17 @@ export const useQuotesStore = defineStore("quotes", {
         }
       }
     },
+    async editUserQuote(quoteEdited: Quote) {
+      try {
+        await backendApi.quotes.editQuote(quoteEdited);
+        this.userQuotes = this.userQuotes.map((q) =>
+          q.id !== quoteEdited.id ? q : quoteEdited
+        );
+      } catch (error) {
+        const errorStore = useErrorsStore();
+        errorStore.handleError(error);
+      }
+    },
     async deleteUserQuote(quoteId: number) {
       try {
         await backendApi.quotes.deleteQuote(quoteId);

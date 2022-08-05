@@ -48,6 +48,8 @@ export const mockAxiosGetUserQuotes = () =>
 export const mockAxiosPostUserQuote = () =>
   Promise.resolve({ data: fakeQuote });
 
+export const mockAxiosPutUserQuote = () => Promise.resolve();
+
 export const mockAxiosDeleteUserQuote = () => {
   Promise.resolve();
 };

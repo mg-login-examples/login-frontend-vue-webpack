@@ -5,7 +5,7 @@
       <div class="absolute right-0 top-0 bottom-0 flex items-center">
         <button
           class="mr-4 px-4 py-2 flex bg-rose-300 justify-center items-center"
-          @click="showCreateQuoteModal = true"
+          @click="openCreateQuoteModal"
           data-test="user-quote--open-create-quote-modal-button"
         >
           <span v-if="windowInnerWidth >= 400">Create</span>
@@ -20,14 +20,17 @@
         :quote="quote"
         :myQuote="true"
         class="m-2"
-        @deleteQuote="getDeleteQuoteConfirmation"
+        @editQuote="openEditQuoteModal"
+        @deleteQuote="openDeleteQuoteConfirmation"
       />
     </div>
     <AppModal v-model="showCreateQuoteModal" class="bg-white">
-      <QuoteCreate
-        @saveQuote="createQuote"
-        @cancelCreateQuote="showCreateQuoteModal = false"
-      ></QuoteCreate>
+      <QuoteCreateEdit
+        :quote="quoteToEdit"
+        @createQuote="createQuote"
+        @editQuote="editQuote"
+        @cancel="showCreateQuoteModal = false"
+      ></QuoteCreateEdit>
     </AppModal>
     <AppModal v-model="showDeleteQuoteModal" class="bg-white">
       <QuoteDelete
@@ -44,7 +47,7 @@ import { ref, onUnmounted } from "vue";
 
 import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import AppModal from "@/components/generic/modal/AppModal.vue";
-import QuoteCreate from "@/components/Quotes/QuoteCreate.vue";
+import QuoteCreateEdit from "@/components/Quotes/QuoteCreateEdit.vue";
 import QuoteDelete from "@/components/Quotes/QuoteDelete.vue";
 import { useQuotesStore } from "@/store/quotes";
 import { Quote } from "@/models/quote.model";
@@ -53,11 +56,25 @@ const quotesStore = useQuotesStore();
 
 quotesStore.getUserQuotes();
 
-// Create quote
+// Create/Edit quote
 const showCreateQuoteModal = ref(false);
+const quoteToEdit = ref<Quote | undefined>(undefined);
 
+function openCreateQuoteModal() {
+  quoteToEdit.value = undefined;
+  showCreateQuoteModal.value = true;
+}
 async function createQuote(quoteText: string) {
   await quotesStore.createUserQuote(quoteText);
+  showCreateQuoteModal.value = false;
+}
+
+function openEditQuoteModal(quoteId: number) {
+  quoteToEdit.value = quotesStore.userQuoteById(quoteId);
+  showCreateQuoteModal.value = true;
+}
+async function editQuote(quote: Quote) {
+  await quotesStore.editUserQuote(quote);
   showCreateQuoteModal.value = false;
 }
 
@@ -65,7 +82,7 @@ async function createQuote(quoteText: string) {
 const showDeleteQuoteModal = ref(false);
 const quoteToDelete = ref<Quote | undefined>(undefined);
 
-async function getDeleteQuoteConfirmation(quoteId: number) {
+async function openDeleteQuoteConfirmation(quoteId: number) {
   quoteToDelete.value = quotesStore.userQuoteById(quoteId);
   showDeleteQuoteModal.value = true;
 }

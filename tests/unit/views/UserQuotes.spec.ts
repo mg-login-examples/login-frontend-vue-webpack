@@ -3,7 +3,7 @@ import { mount } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
 
 import UserQuotes from "@/views/UserQuotes.vue";
-import QuoteCreate from "@/components/Quotes/QuoteCreate.vue";
+import QuoteCreateEdit from "@/components/Quotes/QuoteCreateEdit.vue";
 import QuoteDelete from "@/components/Quotes/QuoteDelete.vue";
 import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import { useQuotesStore } from "@/store/quotes";
@@ -18,7 +18,12 @@ describe("UserQuotes.vue", () => {
     // mount component
     const wrapper = mount(UserQuotes, {
       global: {
-        stubs: ["QuoteTile", "QuoteCreate", "QuoteDelete", "FontAwesomeIcon"],
+        stubs: [
+          "QuoteTile",
+          "QuoteCreateEdit",
+          "QuoteDelete",
+          "FontAwesomeIcon",
+        ],
         plugins: [createTestingPinia()],
       },
     });
@@ -47,7 +52,7 @@ describe("UserQuotes.vue", () => {
     // mount component
     mount(UserQuotes, {
       global: {
-        stubs: ["QuoteTile", "QuoteCreate", "FontAwesomeIcon"],
+        stubs: ["QuoteTile", "QuoteCreateEdit", "FontAwesomeIcon"],
         plugins: [testPinia],
       },
     });
@@ -55,10 +60,7 @@ describe("UserQuotes.vue", () => {
     expect(quotesStore.getUserQuotes).toBeCalled();
   });
 
-  it(`
-  opens create quote modal when clicking on create quote button,
-  calls create quote action and closes modal when save quote event is emitted by CreateQuote component
-  `, async () => {
+  it("opens create quote modal when clicking on create quote button", async () => {
     // mount component
     const wrapper = mount(UserQuotes, {
       global: {
@@ -68,28 +70,41 @@ describe("UserQuotes.vue", () => {
       attachTo: document.body,
     });
     // assert create quote modal not visible
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(false);
+    expect(wrapper.findComponent(QuoteCreateEdit).exists()).toBe(false);
     // click on create quote button
     wrapper.find(selectors.createQuoteButton).trigger("click");
     await Vue.nextTick();
     // assert create quote modal is visible
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(true);
-    // emit save quote event
-    const quoteText = "some quote text";
-    wrapper.findComponent(QuoteCreate).vm.$emit("saveQuote", quoteText);
+    expect(wrapper.findComponent(QuoteCreateEdit).exists()).toBe(true);
+  });
+
+  it(`calls create quote action and closes modal when save quote event is emitted by CreateQuote component`, async () => {
+    // mount component
+    const wrapper = mount(UserQuotes, {
+      global: {
+        stubs: ["QuoteTile", "QuoteDelete", "FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
+      },
+      attachTo: document.body,
+    });
+    // click on create quote button
+    wrapper.find(selectors.createQuoteButton).trigger("click");
     await Vue.nextTick();
-    // assert save quote action is called
+    // assert create quote modal is visible
+    expect(wrapper.findComponent(QuoteCreateEdit).exists()).toBe(true);
+    // emit create quote event
+    const quoteText = "some quote text";
+    wrapper.findComponent(QuoteCreateEdit).vm.$emit("createQuote", quoteText);
+    await Vue.nextTick();
+    // assert create quote action is called
     const quotesStore = useQuotesStore();
     expect(quotesStore.createUserQuote).toBeCalledWith(quoteText);
     // assert create quote modal is closed
     await Vue.nextTick();
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(false);
+    expect(wrapper.findComponent(QuoteCreateEdit).exists()).toBe(false);
   });
 
-  it(`
-  opens create quote modal when clicking on create quote button,
-  closes modal when CreateQuote component emits cancel event
-  `, async () => {
+  it("closes modal when CreateQuote component emits cancel event", async () => {
     // mount component
     const wrapper = mount(UserQuotes, {
       global: {
@@ -98,21 +113,19 @@ describe("UserQuotes.vue", () => {
       },
       attachTo: document.body,
     });
-    // assert create quote modal not visible
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(false);
     // click on create quote button
     wrapper.find(selectors.createQuoteButton).trigger("click");
     await Vue.nextTick();
     // assert create quote modal is visible
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(true);
+    expect(wrapper.findComponent(QuoteCreateEdit).exists()).toBe(true);
     // emit cancel create quote event
-    wrapper.findComponent(QuoteCreate).vm.$emit("cancelCreateQuote");
+    wrapper.findComponent(QuoteCreateEdit).vm.$emit("cancel");
     await Vue.nextTick();
     // assert save quote action is called
     const quotesStore = useQuotesStore();
     expect(quotesStore.createUserQuote).not.toBeCalled();
     // assert create quote modal is closed
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(false);
+    expect(wrapper.findComponent(QuoteCreateEdit).exists()).toBe(false);
   });
 
   it(`
@@ -122,13 +135,12 @@ describe("UserQuotes.vue", () => {
     // mount component
     const wrapper = mount(UserQuotes, {
       global: {
-        stubs: ["QuoteTile", "QuoteCreate", "FontAwesomeIcon"],
+        stubs: ["QuoteTile", "QuoteCreateEdit", "FontAwesomeIcon"],
         plugins: [createTestingPinia()],
       },
     });
     // add user quotes to quote store
     const quotesStore = useQuotesStore();
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(false);
     quotesStore.userQuotes = fakeQuotes;
     await Vue.nextTick();
     // assert quote tiles rendered
@@ -167,13 +179,12 @@ describe("UserQuotes.vue", () => {
     // mount component
     const wrapper = mount(UserQuotes, {
       global: {
-        stubs: ["QuoteTile", "QuoteCreate", "FontAwesomeIcon"],
+        stubs: ["QuoteTile", "QuoteCreateEdit", "FontAwesomeIcon"],
         plugins: [createTestingPinia()],
       },
     });
     // add user quotes to quote store
     const quotesStore = useQuotesStore();
-    expect(wrapper.findComponent(QuoteCreate).exists()).toBe(false);
     quotesStore.userQuotes = fakeQuotes;
     await Vue.nextTick();
     // assert quote tiles rendered

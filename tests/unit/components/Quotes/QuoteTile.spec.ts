@@ -7,6 +7,7 @@ import { fakeQuote } from "../../mocks/quotes";
 const selectors = {
   quoteTile: "[data-test='quote-tile']",
   quoteText: "[data-test='quote-tile--text']",
+  editQuoteButton: "[data-test='quote-tile--edit-quote-button']",
   deleteQuoteButton: "[data-test='quote-tile--delete-quote-button']",
 };
 
@@ -52,7 +53,7 @@ describe("components > QuoteTile.vue", () => {
     ).toBe(false);
   });
 
-  it("renders delete button only when my quote is true and on hover", async () => {
+  it("renders edit button and delete button only when my quote is true and on hover", async () => {
     // mount quoteTile component with prop myQuote true
     const wrapper = mount(QuoteTile, {
       props: {
@@ -63,33 +64,67 @@ describe("components > QuoteTile.vue", () => {
         stubs: ["FontAwesomeIcon"],
       },
     });
-    // assert delete button not visible
+    // assert edit and delete button not visible
+    expect(wrapper.find(selectors.editQuoteButton).exists()).toBe(false);
     expect(wrapper.find(selectors.deleteQuoteButton).exists()).toBe(false);
     // hover on quote tile
     wrapper.find(selectors.quoteTile).trigger("mouseover");
     await Vue.nextTick();
-    // assert delete button visible
+    // assert edit and delete buttons visible
+    expect(wrapper.find(selectors.editQuoteButton).isVisible()).toBe(true);
     expect(wrapper.find(selectors.deleteQuoteButton).isVisible()).toBe(true);
     // stop hover on quote tile
     wrapper.find(selectors.quoteTile).trigger("mouseleave");
     await Vue.nextTick();
-    // assert delete button not visible
+    // assert edit and delete buttons not visible
+    expect(wrapper.find(selectors.editQuoteButton).exists()).toBe(false);
     expect(wrapper.find(selectors.deleteQuoteButton).exists()).toBe(false);
     // change prop myQuote to false
     wrapper.setProps({ myQuote: false });
     await Vue.nextTick();
-    // assert delete button not visible
+    // assert edit and delete buttons not visible
+    expect(wrapper.find(selectors.editQuoteButton).exists()).toBe(false);
     expect(wrapper.find(selectors.deleteQuoteButton).exists()).toBe(false);
     // hover on quote tile
     wrapper.find(selectors.quoteTile).trigger("mouseover");
     await Vue.nextTick();
-    // assert delete button not visible
+    // assert edit and delete buttons not visible
+    expect(wrapper.find(selectors.editQuoteButton).exists()).toBe(false);
     expect(wrapper.find(selectors.deleteQuoteButton).exists()).toBe(false);
     // stop hover on quote tile
     wrapper.find(selectors.quoteTile).trigger("mouseleave");
     await Vue.nextTick();
-    // assert delete button not visible
+    // assert edit and delete buttons not visible
+    expect(wrapper.find(selectors.editQuoteButton).exists()).toBe(false);
     expect(wrapper.find(selectors.deleteQuoteButton).exists()).toBe(false);
+  });
+
+  it("emits edit quote event when edit quote button is clicked", async () => {
+    // mount quoteTile component with prop myQuote true
+    const wrapper = mount(QuoteTile, {
+      props: {
+        quote: fakeQuote,
+        myQuote: true,
+      },
+      global: {
+        stubs: ["FontAwesomeIcon"],
+      },
+    });
+    // assert edit button not visible
+    expect(wrapper.find(selectors.editQuoteButton).exists()).toBe(false);
+    // hover on quote tile
+    wrapper.find(selectors.quoteTile).trigger("mouseover");
+    await Vue.nextTick();
+    // assert edit button visible
+    expect(wrapper.find(selectors.editQuoteButton).isVisible()).toBe(true);
+    // assert edit quote event not yet emitted
+    expect(wrapper.emitted("editQuote")).toBeFalsy();
+    // click on edit button
+    wrapper.find(selectors.editQuoteButton).trigger("click");
+    // assert edit quote event has been emitted with quote id
+    const editQuoteEvent = wrapper.emitted("editQuote") as unknown[];
+    expect(editQuoteEvent).toBeTruthy();
+    expect(editQuoteEvent[0]).toEqual([fakeQuote.id]);
   });
 
   it("emits delete quote event when delete quote button is clicked", async () => {
