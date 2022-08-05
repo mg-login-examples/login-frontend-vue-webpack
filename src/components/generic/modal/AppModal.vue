@@ -2,7 +2,7 @@
   <Teleport to="body">
     <div
       ref="modal-backdrop"
-      class="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 flex justify-center items-center"
+      class="fixed z-30 inset-0 overflow-y-auto bg-black bg-opacity-50 flex justify-center items-center"
       v-if="modelValue"
       @click="closeModal"
       data-test="modal--background"
