@@ -28,6 +28,13 @@ When("I hover on the quote with text {string}", (quoteText: string) => {
 });
 
 Then(
+  "the edit button for the quote with text {string} is visible",
+  (quoteText: string) => {
+    MyQuotesPage.assertEditQuoteButtonIsVisibleOnQuoteTileWithText(quoteText);
+  }
+);
+
+Then(
   "the delete button for the quote with text {string} is visible",
   (quoteText: string) => {
     MyQuotesPage.assertDeleteQuoteButtonIsVisibleOnQuoteTileWithText(quoteText);

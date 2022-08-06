@@ -1,17 +1,27 @@
-export default class CreateQuotePage {
+export default class CreateEditQuotePage {
+  static readonly createEditQuoteTitle =
+    "[data-test='user-quote--create-edit-quote--title']";
   static readonly quoteTextInput =
-    "[data-test='user-quote--create-quote--quote-text']";
+    "[data-test='user-quote--create-edit-quote--quote-text']";
   static readonly cancelButton =
-    "[data-test='user-quote--create-quote--cancel-button']";
+    "[data-test='user-quote--create-edit-quote--cancel-button']";
   static readonly saveQuoteButton =
-    "[data-test='user-quote--create-quote--save-quote-button']";
+    "[data-test='user-quote--create-edit-quote--save-quote-button']";
 
   static assertCreateQuoteModalIsOpen() {
-    cy.get(this.quoteTextInput).should("be.visible");
+    cy.get(this.createEditQuoteTitle).contains("Write A Quote");
   }
 
   static assertCreateQuoteModalIsClosed() {
-    cy.get(this.quoteTextInput).should("not.exist");
+    cy.contains(this.createEditQuoteTitle, "Write A Quote").should("not.exist");
+  }
+
+  static assertEditQuoteModalIsOpen() {
+    cy.get(this.createEditQuoteTitle).contains("Edit Quote");
+  }
+
+  static assertEditQuoteModalIsClosed() {
+    cy.contains(this.createEditQuoteTitle, "Edit Quote").should("not.exist");
   }
 
   static assertQuoteTextInputIsVisible() {

@@ -29,6 +29,6 @@ Then(
   }
 );
 
-Then("the quote with text {string} is deleted", (quoteText: string) => {
+Then("the quote with text {string} is not visible", (quoteText: string) => {
   MyQuotesPage.assertQuoteWithTextIsNotVisible(quoteText);
 });

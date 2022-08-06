@@ -6,9 +6,10 @@ import { fakeQuote } from "../../mocks/quotes";
 
 const selectors = {
   createEditQuoteTitle: "[data-test='user-quote--create-edit-quote--title']",
-  quoteTextInput: "[data-test='user-quote--create-quote--quote-text']",
-  cancelButton: "[data-test='user-quote--create-quote--cancel-button']",
-  saveQuoteButton: "[data-test='user-quote--create-quote--save-quote-button']",
+  quoteTextInput: "[data-test='user-quote--create-edit-quote--quote-text']",
+  cancelButton: "[data-test='user-quote--create-edit-quote--cancel-button']",
+  saveQuoteButton:
+    "[data-test='user-quote--create-edit-quote--save-quote-button']",
 };
 
 describe("components > QuoteCreateEdit.vue", () => {
@@ -22,6 +23,19 @@ describe("components > QuoteCreateEdit.vue", () => {
     expect(wrapper.find(selectors.createEditQuoteTitle).text()).toContain(
       "Edit Quote"
     );
+  });
+
+  it("fills quote text input if prop quote is defined and blank otherwise", async () => {
+    let wrapper = mount(QuoteCreate);
+    expect(
+      (wrapper.find(selectors.quoteTextInput).element as HTMLInputElement).value
+    ).toBe("");
+    wrapper = mount(QuoteCreate, {
+      props: { quote: { ...fakeQuote } },
+    });
+    expect(
+      (wrapper.find(selectors.quoteTextInput).element as HTMLInputElement).value
+    ).toBe(fakeQuote.text);
   });
 
   it("disables save button until quote text input is not empty", async () => {

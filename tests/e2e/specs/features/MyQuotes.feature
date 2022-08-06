@@ -24,6 +24,21 @@ Feature: My Quotes
     Then create new quote modal is closed
     And a quote "a new quote" is visible in my quotes
 
+  Scenario: Edit a quote
+    Given I am logged in as a user with email "my_quotes_test@fakemail.com" and password "12345678"
+    And I have created a quote "quote to be edited"
+    And I open my quotes view
+    When I hover on the quote with text "quote to be edited"
+    Then the edit button for the quote with text "quote to be edited" is visible
+    When I click on edit button for the quote with text "quote to be edited"
+    Then edit quote modal is open
+    And quote input has text "quote to be edited"
+    When I enter some quote "quote is edited"
+    And I click on save button
+    Then edit quote modal is closed
+    And a quote "quote is edited" is visible in my quotes
+    And the quote with text "quote to be edited" is not visible
+
   Scenario: Delete a quote
     Given I am logged in as a user with email "my_quotes_test@fakemail.com" and password "12345678"
     And I have created a quote "quote to be deleted"
@@ -35,4 +50,4 @@ Feature: My Quotes
     And the quote to delete with text "quote to be deleted" is visible
     When I click on delete button in the delete quote modal
     Then the delete quote modal is closed
-    And the quote with text "quote to be deleted" is deleted
+    And the quote with text "quote to be deleted" is not visible

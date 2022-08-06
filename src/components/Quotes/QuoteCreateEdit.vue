@@ -11,20 +11,20 @@
         v-model="quoteText"
         class="p-2 w-full h-32 bg-slate-300"
         placeholder="enter your own quote"
-        data-test="user-quote--create-quote--quote-text"
+        data-test="user-quote--create-edit-quote--quote-text"
       ></textarea>
     </div>
     <div class="flex justify-end my-4">
       <button
         @click="cancel"
-        data-test="user-quote--create-quote--cancel-button"
+        data-test="user-quote--create-edit-quote--cancel-button"
         class="bg-slate-400 mx-2 p-2"
       >
         Cancel
       </button>
       <button
         @click="save"
-        data-test="user-quote--create-quote--save-quote-button"
+        data-test="user-quote--create-edit-quote--save-quote-button"
         class="bg-slate-400 p-2 mx-2"
         :disabled="quoteText === ''"
       >
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import { Quote } from "@/models/quote.model";
 
@@ -44,6 +44,16 @@ const props = defineProps<{
 }>();
 
 const quoteText = ref("");
+
+watch(
+  () => props.quote,
+  (newQuote) => {
+    if (newQuote) {
+      quoteText.value = newQuote.text;
+    }
+  },
+  { immediate: true }
+);
 
 function save() {
   if (props.quote) {

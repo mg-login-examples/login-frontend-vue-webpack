@@ -4,6 +4,8 @@ export default class MyQuotesPage {
   static readonly quoteTile = "[data-test='quote-tile']";
   static readonly openCreateQuoteModalButton =
     "[data-test='user-quote--open-create-quote-modal-button']";
+  static readonly editQuoteButton =
+    "[data-test='quote-tile--edit-quote-button']";
   static readonly deleteQuoteButton =
     "[data-test='quote-tile--delete-quote-button']";
 
@@ -40,8 +42,16 @@ export default class MyQuotesPage {
     cy.get(this.quoteTile).contains(quoteText).trigger("mouseover");
   }
 
+  static clickOnEditButtonOfQuoteTileWithText(quoteText: string) {
+    cy.contains(this.quoteTile, quoteText).find(this.editQuoteButton).click();
+  }
+
   static clickOnDeleteButtonOfQuoteTileWithText(quoteText: string) {
     cy.contains(this.quoteTile, quoteText).find(this.deleteQuoteButton).click();
+  }
+
+  static assertEditQuoteButtonIsVisibleOnQuoteTileWithText(quoteText: string) {
+    cy.contains(this.quoteTile, quoteText).find(this.editQuoteButton);
   }
 
   static assertDeleteQuoteButtonIsVisibleOnQuoteTileWithText(
