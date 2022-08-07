@@ -17,3 +17,13 @@ Then("I am redirected to All Quotes page", () => {
 Then("I see a quote", () => {
   AllQuotesPage.assertSomeQuoteIsVisible();
 });
+
+Then(
+  "I see a quote with text {string} by author {string}",
+  (quoteText: string, authorUsername: string) => {
+    AllQuotesPage.assertQuoteWithTextAndAuthorIsVisible(
+      quoteText,
+      authorUsername
+    );
+  }
+);

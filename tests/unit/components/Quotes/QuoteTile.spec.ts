@@ -7,6 +7,7 @@ import { fakeQuote } from "../../mocks/quotes";
 const selectors = {
   quoteTile: "[data-test='quote-tile']",
   quoteText: "[data-test='quote-tile--text']",
+  quoteAuthorUsername: "[data-test='quote-tile--author-username']",
   editQuoteButton: "[data-test='quote-tile--edit-quote-button']",
   deleteQuoteButton: "[data-test='quote-tile--delete-quote-button']",
 };
@@ -24,7 +25,24 @@ describe("components > QuoteTile.vue", () => {
     expect(wrapper.find(selectors.quoteText).text()).toBe(fakeQuote.text);
   });
 
-  it("selects tile background based on prop 'myQuote's value", async () => {
+  it("renders author username if only when prop myQuote value is false", () => {
+    const expectedQuoteUsername = "abc";
+    const quoteEmail = "abc@some_email.com";
+    const quoteAuthor = { ...fakeQuote.author, email: quoteEmail };
+    const quote = { ...fakeQuote, author: quoteAuthor };
+    // mount quoteTile component with prop myQuote false (default value)
+    const wrapper = mount(QuoteTile, {
+      props: { quote },
+      global: {
+        stubs: ["FontAwesomeIcon"],
+      },
+    });
+    expect(wrapper.find(selectors.quoteAuthorUsername).text()).toBe(
+      `- ${expectedQuoteUsername}`
+    );
+  });
+
+  it("selects tile background based on prop myQuote's value", async () => {
     const allQuoteBackgroundClass = "from-orange-100";
     const userQuoteBackgroundClass = "from-red-100";
     const wrapper = mount(QuoteTile, {
@@ -53,7 +71,7 @@ describe("components > QuoteTile.vue", () => {
     ).toBe(false);
   });
 
-  it("renders edit button and delete button only when my quote is true and on hover", async () => {
+  it("renders edit button and delete button only when prop myQuote is true and on hover", async () => {
     // mount quoteTile component with prop myQuote true
     const wrapper = mount(QuoteTile, {
       props: {

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative p-2 w-48 h-36 overflow-scroll bg-gradient-to-br"
+    class="relative p-2 w-48 h-36 flex flex-col bg-gradient-to-br"
     :class="
       myQuote ? 'from-red-100 to-red-200' : 'from-orange-100 to-orange-200'
     "
@@ -8,12 +8,18 @@
     @mouseleave="tileHover = false"
     data-test="quote-tile"
   >
-    <div data-test="quote-tile--text">
+    <div class="grow overflow-scroll" data-test="quote-tile--text">
       {{ quote.text }}
     </div>
-    <div class="absolute left-0 bottom-0">
+    <div
+      v-if="!myQuote"
+      class="basis-6 whitespace-nowrap truncate"
+      data-test="quote-tile--author-username"
+    >
+      - {{ getQuoteAuthorUsername() }}
+    </div>
+    <div v-if="myQuote && tileHover" class="absolute left-0 bottom-0">
       <button
-        v-if="myQuote && tileHover"
         @click="editQuote"
         class="m-4"
         data-test="quote-tile--edit-quote-button"
@@ -21,9 +27,8 @@
         <font-awesome-icon icon="pencil" />
       </button>
     </div>
-    <div class="absolute right-0 bottom-0">
+    <div v-if="myQuote && tileHover" class="absolute right-0 bottom-0">
       <button
-        v-if="myQuote && tileHover"
         @click="deleteQuote"
         class="m-4"
         data-test="quote-tile--delete-quote-button"
@@ -57,4 +62,8 @@ const emit = defineEmits<{
   (e: "deleteQuote", quoteId: number): void;
   (e: "editQuote", quoteId: number): void;
 }>();
+
+function getQuoteAuthorUsername() {
+  return props.quote.author.email.split("@")[0];
+}
 </script>
