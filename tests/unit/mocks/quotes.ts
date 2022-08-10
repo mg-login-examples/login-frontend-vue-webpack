@@ -53,3 +53,11 @@ export const mockAxiosPutUserQuote = () => Promise.resolve();
 export const mockAxiosDeleteUserQuote = () => {
   Promise.resolve();
 };
+
+export const mockAxiosLikeQuote = () => {
+  Promise.resolve();
+};
+
+export const mockAxiosUnlikeQuote = () => {
+  Promise.resolve();
+};

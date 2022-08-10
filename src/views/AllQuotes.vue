@@ -9,6 +9,8 @@
         :key="quote.id"
         :quote="quote"
         :myQuote="false"
+        @likeQuote="likeQuote"
+        @unlikeQuote="unlikeQuote"
         class="m-2"
       />
     </div>
@@ -22,4 +24,12 @@ import { useQuotesStore } from "@/store/quotes";
 const quotesStore = useQuotesStore();
 
 quotesStore.getQuotes();
+
+// Like unlike quote
+async function likeQuote(quoteId: number) {
+  await quotesStore.likeQuote(quoteId);
+}
+async function unlikeQuote(quoteId: number) {
+  await quotesStore.unlikeQuote(quoteId);
+}
 </script>

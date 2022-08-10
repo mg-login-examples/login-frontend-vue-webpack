@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 
 import { Quote } from "@/models/quote.model";
+import { User } from "@/models/user.model";
 import backendApi from "@/api/backendApi";
 import { useErrorsStore } from "./errors";
 import { useUserStore } from "./user";
@@ -8,12 +9,18 @@ import { QuoteCreate } from "@/models/quote-create.model";
 
 interface QuotesState {
   quotes: Quote[];
+  quotesSkip: number;
+  quotesLimit: number;
+  quotesMoreAvailable: boolean;
   userQuotes: Quote[];
 }
 
 export const useQuotesStore = defineStore("quotes", {
   state: (): QuotesState => ({
     quotes: [],
+    quotesSkip: 0,
+    quotesLimit: 21,
+    quotesMoreAvailable: true,
     userQuotes: [],
   }),
   getters: {
@@ -23,9 +30,22 @@ export const useQuotesStore = defineStore("quotes", {
     },
   },
   actions: {
-    async getQuotes() {
+    async getQuotes(reset = false) {
       try {
-        this.quotes = await backendApi.quotes.getQuotes();
+        if (reset) {
+          this.quotesSkip = 0;
+        }
+        if (this.quotesMoreAvailable) {
+          const newQuotes = await backendApi.quotes.getQuotes({
+            skip: this.quotesSkip,
+            limit: this.quotesLimit,
+          });
+          this.quotesSkip += this.quotesLimit;
+          if (newQuotes.length < this.quotesLimit) {
+            this.quotesMoreAvailable = false;
+          }
+          this.quotes = [...this.quotes, ...newQuotes];
+        }
       } catch (error) {
         const errorStore = useErrorsStore();
         errorStore.handleError(error);
@@ -85,6 +105,44 @@ export const useQuotesStore = defineStore("quotes", {
       } catch (error) {
         const errorStore = useErrorsStore();
         errorStore.handleError(error);
+      }
+    },
+    async likeQuote(quoteId: number) {
+      const userStore = useUserStore();
+      if (userStore.user) {
+        try {
+          await backendApi.quotes.likeQuote(quoteId, userStore.user.id);
+          this.quotes = this.quotes.map((quote) => {
+            if (quote.id === quoteId) {
+              quote.liked_by_users.push(userStore.user as User);
+            }
+            return quote;
+          });
+        } catch (error) {
+          const errorStore = useErrorsStore();
+          errorStore.handleError(error);
+          this.userQuotes = [];
+        }
+      }
+    },
+    async unlikeQuote(quoteId: number) {
+      const userStore = useUserStore();
+      if (userStore.user) {
+        try {
+          await backendApi.quotes.unlikeQuote(quoteId, userStore.user.id);
+          this.quotes = this.quotes.map((quote) => {
+            if (quote.id === quoteId) {
+              quote.liked_by_users = quote.liked_by_users.filter(
+                (user) => user.id !== user.id
+              );
+            }
+            return quote;
+          });
+        } catch (error) {
+          const errorStore = useErrorsStore();
+          errorStore.handleError(error);
+          this.userQuotes = [];
+        }
       }
     },
   },

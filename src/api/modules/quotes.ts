@@ -1,10 +1,15 @@
 import { QuoteCreate } from "@/models/quote-create.model";
 import { Quote } from "@/models/quote.model";
+import { User } from "@/models/user.model";
 import http from "./base";
 
 const quotesApi = {
-  async getQuotes(): Promise<Quote[]> {
-    const response = await http.get(`/api/quotes/`);
+  async getQuotes(
+    params: { skip?: number; limit?: number } | undefined = undefined
+  ): Promise<Quote[]> {
+    const skip = params && params.skip ? params.skip : 0;
+    const limit = params && params.limit ? params.limit : 40;
+    const response = await http.get(`/api/quotes/?skip=${skip}&limit=${limit}`);
     return <Quote[]>response.data;
   },
   async getUserQuotes(userId: number): Promise<Quote[]> {
@@ -20,6 +25,12 @@ const quotesApi = {
   },
   async deleteQuote(quoteId: number) {
     await http.delete(`/api/quotes/${quoteId}/`);
+  },
+  async likeQuote(quoteId: number, userId: number) {
+    await http.put(`/api/quotes/${quoteId}/users/${userId}/like/`);
+  },
+  async unlikeQuote(quoteId: number, userId: number) {
+    await http.delete(`/api/quotes/${quoteId}/users/${userId}/like/`);
   },
 };
 

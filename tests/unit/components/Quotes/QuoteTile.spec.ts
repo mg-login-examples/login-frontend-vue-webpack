@@ -1,8 +1,11 @@
 import * as Vue from "vue";
 import { mount } from "@vue/test-utils";
+import { createTestingPinia } from "@pinia/testing";
 
 import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import { fakeQuote } from "../../mocks/quotes";
+import { useUserStore } from "@/store/user";
+import { fakeUser } from "../../mocks/user";
 
 const selectors = {
   quoteTile: "[data-test='quote-tile']",
@@ -10,6 +13,8 @@ const selectors = {
   quoteAuthorUsername: "[data-test='quote-tile--author-username']",
   editQuoteButton: "[data-test='quote-tile--edit-quote-button']",
   deleteQuoteButton: "[data-test='quote-tile--delete-quote-button']",
+  likeQuoteButton: "[data-test='quote-tile--like-quote-button']",
+  unlikeQuoteButton: "[data-test='quote-tile--unlike-quote-button']",
 };
 
 describe("components > QuoteTile.vue", () => {
@@ -20,6 +25,7 @@ describe("components > QuoteTile.vue", () => {
       },
       global: {
         stubs: ["FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
       },
     });
     expect(wrapper.find(selectors.quoteText).text()).toBe(fakeQuote.text);
@@ -35,6 +41,7 @@ describe("components > QuoteTile.vue", () => {
       props: { quote },
       global: {
         stubs: ["FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
       },
     });
     expect(wrapper.find(selectors.quoteAuthorUsername).text()).toBe(
@@ -52,6 +59,7 @@ describe("components > QuoteTile.vue", () => {
       },
       global: {
         stubs: ["FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
       },
     });
     expect(
@@ -80,6 +88,7 @@ describe("components > QuoteTile.vue", () => {
       },
       global: {
         stubs: ["FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
       },
     });
     // assert edit and delete button not visible
@@ -126,6 +135,7 @@ describe("components > QuoteTile.vue", () => {
       },
       global: {
         stubs: ["FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
       },
     });
     // assert edit button not visible
@@ -154,6 +164,7 @@ describe("components > QuoteTile.vue", () => {
       },
       global: {
         stubs: ["FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
       },
     });
     // assert delete button not visible
@@ -171,5 +182,63 @@ describe("components > QuoteTile.vue", () => {
     const deleteQuoteEvent = wrapper.emitted("deleteQuote") as unknown[];
     expect(deleteQuoteEvent).toBeTruthy();
     expect(deleteQuoteEvent[0]).toEqual([fakeQuote.id]);
+  });
+
+  it("emits like quote event when like quote button is clicked", async () => {
+    // mount quoteTile component with prop myQuote false
+    const wrapper = mount(QuoteTile, {
+      props: {
+        quote: fakeQuote,
+        myQuote: false,
+      },
+      global: {
+        stubs: ["FontAwesomeIcon"],
+        plugins: [createTestingPinia()],
+      },
+    });
+    // assert like button not visible
+    expect(wrapper.find(selectors.likeQuoteButton).exists()).toBe(false);
+    // hover on quote tile
+    wrapper.find(selectors.quoteTile).trigger("mouseover");
+    await Vue.nextTick();
+    // assert like button visible
+    expect(wrapper.find(selectors.likeQuoteButton).isVisible()).toBe(true);
+    // assert like quote event not yet emitted
+    expect(wrapper.emitted("likeQuote")).toBeFalsy();
+    // click on like button
+    wrapper.find(selectors.likeQuoteButton).trigger("click");
+    // assert like quote event has been emitted with quote id
+    const likeQuoteEvent = wrapper.emitted("likeQuote") as unknown[];
+    expect(likeQuoteEvent).toBeTruthy();
+    expect(likeQuoteEvent[0]).toEqual([fakeQuote.id]);
+  });
+
+  it("emits unlike quote event when unlike quote button is clicked", async () => {
+    // init user store with logged in user
+    const testPinia = createTestingPinia();
+    const userStore = useUserStore();
+    userStore.user = fakeUser;
+    // mount quoteTile component with prop myQuote false
+    const quote = { ...fakeQuote, liked_by_users: [fakeUser] };
+    const wrapper = mount(QuoteTile, {
+      props: {
+        quote,
+        myQuote: false,
+      },
+      global: {
+        stubs: ["FontAwesomeIcon"],
+        plugins: [testPinia],
+      },
+    });
+    // assert unlike button visible
+    expect(wrapper.find(selectors.unlikeQuoteButton).isVisible()).toBe(true);
+    // assert unlike quote event not yet emitted
+    expect(wrapper.emitted("unlikeQuote")).toBeFalsy();
+    // click on unlike button
+    wrapper.find(selectors.unlikeQuoteButton).trigger("click");
+    // assert unlike quote event has been emitted with quote id
+    const unlikeQuoteEvent = wrapper.emitted("unlikeQuote") as unknown[];
+    expect(unlikeQuoteEvent).toBeTruthy();
+    expect(unlikeQuoteEvent[0]).toEqual([fakeQuote.id]);
   });
 });
