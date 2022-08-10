@@ -1,12 +1,12 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
 
-import { overwriteIfKeyInStore } from "../randomTestDataUtil/store";
+import { getValueFromStore } from "../testDataStore/store";
 import MyQuotesPage from "../pageObjects/my-quotes.page";
 import CreateEditQuotePage from "../pageObjects/create-edit-quote.page";
 
 // Uses randomized value
 Given("I have created a quote {string}", (quoteText: string) => {
-  quoteText = overwriteIfKeyInStore(quoteText);
+  quoteText = getValueFromStore(quoteText);
   MyQuotesPage.goToMyQuotesPage();
   MyQuotesPage.clickOnCreateQuoteButton();
   CreateEditQuotePage.assertCreateQuoteModalIsOpen();
@@ -24,14 +24,14 @@ When("I click on create new quote button", () => {
 When(
   "I click on edit button for the quote with text {string}",
   (quoteText: string) => {
-    quoteText = overwriteIfKeyInStore(quoteText);
+    quoteText = getValueFromStore(quoteText);
     MyQuotesPage.clickOnEditButtonOfQuoteTileWithText(quoteText);
   }
 );
 
 // Uses randomized value
 When("I enter some quote {string}", (quoteText: string) => {
-  quoteText = overwriteIfKeyInStore(quoteText);
+  quoteText = getValueFromStore(quoteText);
   CreateEditQuotePage.enterQuoteText(quoteText);
 });
 
@@ -57,7 +57,7 @@ Then("edit quote modal is closed", () => {
 
 // Uses randomized value
 Then("quote input has text {string}", (quoteTextInputValue: string) => {
-  quoteTextInputValue = overwriteIfKeyInStore(quoteTextInputValue);
+  quoteTextInputValue = getValueFromStore(quoteTextInputValue);
   CreateEditQuotePage.assertQuoteTextInputHasValue(quoteTextInputValue);
 });
 

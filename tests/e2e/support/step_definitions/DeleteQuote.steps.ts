@@ -1,6 +1,6 @@
 import { When, Then } from "cypress-cucumber-preprocessor/steps";
 
-import { overwriteIfKeyInStore } from "../randomTestDataUtil/store";
+import { getValueFromStore } from "../testDataStore/store";
 import MyQuotesPage from "../pageObjects/my-quotes.page";
 import DeleteQuotePage from "../pageObjects/delete-quote.page";
 
@@ -8,7 +8,7 @@ import DeleteQuotePage from "../pageObjects/delete-quote.page";
 When(
   "I click on delete button for the quote with text {string}",
   (quoteText: string) => {
-    quoteText = overwriteIfKeyInStore(quoteText);
+    quoteText = getValueFromStore(quoteText);
     MyQuotesPage.clickOnDeleteButtonOfQuoteTileWithText(quoteText);
   }
 );
@@ -29,13 +29,13 @@ Then("the delete quote modal is closed", () => {
 Then(
   "the quote to delete with text {string} is visible",
   (quoteText: string) => {
-    quoteText = overwriteIfKeyInStore(quoteText);
+    quoteText = getValueFromStore(quoteText);
     DeleteQuotePage.assertQuoteToDeleteTextIsVisible(quoteText);
   }
 );
 
 // Uses randomized value
 Then("the quote with text {string} is not visible", (quoteText: string) => {
-  quoteText = overwriteIfKeyInStore(quoteText);
+  quoteText = getValueFromStore(quoteText);
   MyQuotesPage.assertQuoteWithTextIsNotVisible(quoteText);
 });

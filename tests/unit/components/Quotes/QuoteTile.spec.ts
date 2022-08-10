@@ -79,7 +79,7 @@ describe("components > QuoteTile.vue", () => {
     ).toBe(false);
   });
 
-  it("renders edit button and delete button only when prop myQuote is true and on hover", async () => {
+  it("renders edit button and delete button only on hover and when prop myQuote is true", async () => {
     // mount quoteTile component with prop myQuote true
     const wrapper = mount(QuoteTile, {
       props: {
@@ -124,6 +124,105 @@ describe("components > QuoteTile.vue", () => {
     // assert edit and delete buttons not visible
     expect(wrapper.find(selectors.editQuoteButton).exists()).toBe(false);
     expect(wrapper.find(selectors.deleteQuoteButton).exists()).toBe(false);
+  });
+
+  it("renders like button only on hover and when prop myQuote is false and user is logged in", async () => {
+    // set store as not logged in
+    const testPinia = createTestingPinia();
+    const userStore = useUserStore();
+    // set quote as not liked to render like button
+    const quote = { ...fakeQuote, liked_by_users: [] };
+    // mount quoteTile component with prop myQuote false
+    const wrapper = mount(QuoteTile, {
+      props: {
+        quote,
+        myQuote: false,
+      },
+      global: {
+        stubs: ["FontAwesomeIcon"],
+        plugins: [testPinia],
+      },
+    });
+    // set user in store to simulate login
+    userStore.user = fakeUser;
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.likeQuoteButton).exists()).toBe(false);
+    // hover on quote tile
+    wrapper.find(selectors.quoteTile).trigger("mouseover");
+    await Vue.nextTick();
+    // assert like button is visible
+    expect(wrapper.find(selectors.likeQuoteButton).isVisible()).toBe(true);
+    // remove user in store to simulate logout
+    userStore.user = null;
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.likeQuoteButton).exists()).toBe(false);
+    // stop hover on quote tile
+    wrapper.find(selectors.quoteTile).trigger("mouseleave");
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.likeQuoteButton).exists()).toBe(false);
+    // set user in store to simulate login
+    userStore.user = fakeUser;
+    await Vue.nextTick();
+    // change prop myQuote to true
+    wrapper.setProps({ myQuote: true });
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.likeQuoteButton).exists()).toBe(false);
+    // hover on quote tile
+    wrapper.find(selectors.quoteTile).trigger("mouseover");
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.likeQuoteButton).exists()).toBe(false);
+    // stop hover on quote tile
+    wrapper.find(selectors.quoteTile).trigger("mouseleave");
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.likeQuoteButton).exists()).toBe(false);
+  });
+
+  it("renders unlike button only when prop myQuote is false and user is logged in", async () => {
+    // set store as not logged in
+    const testPinia = createTestingPinia();
+    const userStore = useUserStore();
+    // set quote as not liked to render like button
+    const quote = { ...fakeQuote, liked_by_users: [fakeUser] };
+    // mount quoteTile component with prop myQuote false
+    const wrapper = mount(QuoteTile, {
+      props: {
+        quote,
+        myQuote: false,
+      },
+      global: {
+        stubs: ["FontAwesomeIcon"],
+        plugins: [testPinia],
+      },
+    });
+    // set user in store to simulate login
+    userStore.user = fakeUser;
+    await Vue.nextTick();
+    // assert like button is visible
+    expect(wrapper.find(selectors.unlikeQuoteButton).isVisible()).toBe(true);
+    // remove user in store to simulate logout
+    userStore.user = null;
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.unlikeQuoteButton).exists()).toBe(false);
+    // set user in store to simulate login
+    userStore.user = fakeUser;
+    await Vue.nextTick();
+    // change prop myQuote to true
+    wrapper.setProps({ myQuote: true });
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.unlikeQuoteButton).exists()).toBe(false);
+    // stop hover on quote tile
+    wrapper.find(selectors.quoteTile).trigger("mouseleave");
+    await Vue.nextTick();
+    // assert like button not visible
+    expect(wrapper.find(selectors.unlikeQuoteButton).exists()).toBe(false);
   });
 
   it("emits edit quote event when edit quote button is clicked", async () => {
@@ -185,6 +284,10 @@ describe("components > QuoteTile.vue", () => {
   });
 
   it("emits like quote event when like quote button is clicked", async () => {
+    // set store as not logged in
+    const testPinia = createTestingPinia();
+    const userStore = useUserStore();
+    userStore.user = fakeUser;
     // mount quoteTile component with prop myQuote false
     const wrapper = mount(QuoteTile, {
       props: {
@@ -193,7 +296,7 @@ describe("components > QuoteTile.vue", () => {
       },
       global: {
         stubs: ["FontAwesomeIcon"],
-        plugins: [createTestingPinia()],
+        plugins: [testPinia],
       },
     });
     // assert like button not visible

@@ -3,7 +3,7 @@
 import minifaker from "minifaker";
 import "minifaker/dist/cjs/locales/en";
 
-const Store = {
+const RandomValueStore = {
   "random > my quote > create quote": minifaker
     .array(8, () => minifaker.word())
     .join(" "),
@@ -16,11 +16,28 @@ const Store = {
   "random > my quote > delete quote": minifaker
     .array(6, () => minifaker.word())
     .join(" "),
+  "random > all quotes > like quote": minifaker
+    .array(6, () => minifaker.word())
+    .join(" "),
+  "random > all quotes > unlike quote": minifaker
+    .array(6, () => minifaker.word())
+    .join(" "),
 };
 
-export function overwriteIfKeyInStore(key: string) {
-  if (key in Store) {
-    return Store[key];
+export const WebpageValueStore = {
+  "webpage > all quotes > like quote": undefined,
+  "webpage > all quotes > unlike quote": undefined,
+};
+
+export function getValueFromStore(key: string) {
+  if (key in RandomValueStore) {
+    return RandomValueStore[key];
+  } else if (key in WebpageValueStore) {
+    return WebpageValueStore[key];
   }
   return key;
+}
+
+export function setValueInStore(key: string, value: string) {
+  WebpageValueStore[key] = value;
 }

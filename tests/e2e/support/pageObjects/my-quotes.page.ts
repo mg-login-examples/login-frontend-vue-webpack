@@ -1,9 +1,10 @@
 export default class MyQuotesPage {
   static readonly urlPath = "my-quotes";
 
-  static readonly quoteTile = "[data-test='quote-tile']";
   static readonly openCreateQuoteModalButton =
     "[data-test='user-quote--open-create-quote-modal-button']";
+  static readonly quoteTile = "[data-test='quote-tile']";
+  static readonly quoteText = "[data-test='quote-tile--text']";
   static readonly editQuoteButton =
     "[data-test='quote-tile--edit-quote-button']";
   static readonly deleteQuoteButton =
@@ -40,6 +41,10 @@ export default class MyQuotesPage {
 
   static hoverOnQuoteTileWithText(quoteText: string) {
     cy.get(this.quoteTile).contains(quoteText).trigger("mouseover");
+  }
+
+  static stopHoverOnQuoteTileWithText(quoteText: string) {
+    cy.get(this.quoteTile).contains(quoteText).trigger("mouseleave");
   }
 
   static clickOnEditButtonOfQuoteTileWithText(quoteText: string) {

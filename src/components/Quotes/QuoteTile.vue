@@ -19,7 +19,7 @@
       </div>
     </div>
     <div
-      v-if="!myQuote && (tileHover || userLiked)"
+      v-if="!myQuote && (tileHover || userLiked) && userStore.user"
       class="absolute right-0 bottom-0"
     >
       <button
