@@ -19,7 +19,7 @@ export const useQuotesStore = defineStore("quotes", {
   state: (): QuotesState => ({
     quotes: [],
     quotesSkip: 0,
-    quotesLimit: 21,
+    quotesLimit: 51,
     quotesMoreAvailable: true,
     userQuotes: [],
   }),
@@ -30,21 +30,13 @@ export const useQuotesStore = defineStore("quotes", {
     },
   },
   actions: {
-    async getQuotes(reset = false) {
+    async getQuotes() {
       try {
-        if (reset) {
-          this.quotesSkip = 0;
-        }
         if (this.quotesMoreAvailable) {
-          const newQuotes = await backendApi.quotes.getQuotes({
+          this.quotes = await backendApi.quotes.getQuotes({
             skip: this.quotesSkip,
             limit: this.quotesLimit,
           });
-          this.quotesSkip += this.quotesLimit;
-          if (newQuotes.length < this.quotesLimit) {
-            this.quotesMoreAvailable = false;
-          }
-          this.quotes = [...this.quotes, ...newQuotes];
         }
       } catch (error) {
         const errorStore = useErrorsStore();
