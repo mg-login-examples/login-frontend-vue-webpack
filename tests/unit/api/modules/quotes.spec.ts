@@ -25,6 +25,9 @@ const mockedHttpDelete = http.delete as jest.Mock;
 describe("api > modules > quotes.ts", () => {
   beforeEach(() => {
     mockedHttpGet.mockClear();
+    mockedHttpPost.mockClear();
+    mockedHttpPut.mockClear();
+    mockedHttpDelete.mockClear();
   });
 
   it("gets quotes", async () => {

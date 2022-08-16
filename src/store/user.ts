@@ -21,8 +21,11 @@ export const useUserStore = defineStore("user", {
       rememberMe: boolean
     ): Promise<boolean> {
       try {
-        await backendApi.users.login(userEmail, userPassword, rememberMe);
-        this.user = await backendApi.users.authenticate();
+        this.user = await backendApi.users.login(
+          userEmail,
+          userPassword,
+          rememberMe
+        );
         return true;
       } catch (error) {
         const errorStore = useErrorsStore();
@@ -49,6 +52,42 @@ export const useUserStore = defineStore("user", {
         const errorStore = useErrorsStore();
         errorStore.handleError(error);
         this.user = null;
+        return false;
+      }
+    },
+    async createUser(userEmail: string, userPassword: string) {
+      try {
+        const userCreate = {
+          email: userEmail,
+          password: userPassword,
+        };
+        this.user = await backendApi.users.createUser(userCreate);
+        return true;
+      } catch (error) {
+        const errorStore = useErrorsStore();
+        errorStore.handleError(error);
+        this.user = null;
+        return false;
+      }
+    },
+    async verifyEmail(verificationCode: number) {
+      try {
+        await backendApi.emailVerifications.verifyEmail(verificationCode);
+        this.user = await backendApi.users.authenticate();
+        return true;
+      } catch (error) {
+        const errorStore = useErrorsStore();
+        errorStore.handleError(error);
+        return false;
+      }
+    },
+    async resendEmail() {
+      try {
+        await backendApi.emailVerifications.resendEmail();
+        return true;
+      } catch (error) {
+        const errorStore = useErrorsStore();
+        errorStore.handleError(error);
         return false;
       }
     },

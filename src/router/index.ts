@@ -6,6 +6,8 @@ import {
 } from "vue-router";
 import AllQuotes from "../views/AllQuotes.vue";
 import LoginView from "../views/LoginView.vue";
+import SignupView from "../views/SignupView.vue";
+import VerifyEmail from "../views/VerifyEmail.vue";
 import { useUserStore } from "@/store/user";
 
 export const routes: Array<RouteRecordRaw> = [
@@ -29,6 +31,16 @@ export const routes: Array<RouteRecordRaw> = [
     component: LoginView,
     props: true,
   },
+  {
+    path: "/signup",
+    name: "signup",
+    component: SignupView,
+  },
+  {
+    path: "/verify-email",
+    name: "verifyEmail",
+    component: VerifyEmail,
+  },
 ];
 
 const router = createRouter({
@@ -49,6 +61,11 @@ export async function routerBeforeEachGuard(
     if (!userStore.user) {
       return {
         name: "login",
+        params: { user_requested_route: to.fullPath },
+      };
+    } else if (!userStore.user.is_verified) {
+      return {
+        name: "verifyEmail",
         params: { user_requested_route: to.fullPath },
       };
     }

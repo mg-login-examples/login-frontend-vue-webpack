@@ -13,7 +13,7 @@ const selectors = {
   createQuoteButton: "[data-test='user-quote--open-create-quote-modal-button']",
 };
 
-describe("UserQuotes.vue", () => {
+describe("views > UserQuotes.vue", () => {
   it("renders a list of user quotes from quotes store", async () => {
     // mount component
     const wrapper = mount(UserQuotes, {

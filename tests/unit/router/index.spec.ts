@@ -10,6 +10,8 @@ import { getMockRoutes } from "../mocks/routes";
 import MockAllQuotes from "../mocks/mockVues/AllQuotes.vue";
 import MockUserQuotes from "../mocks/mockVues/UserQuotes.vue";
 import MockLoginView from "../mocks/mockVues/LoginView.vue";
+import MockSignupView from "../mocks/mockVues/SignupView.vue";
+import MockVerifyEmail from "../mocks/mockVues/VerifyEmail.vue";
 import { fakeUser } from "../mocks/user";
 
 const mockRoutes = getMockRoutes(routes);
@@ -74,6 +76,50 @@ describe("App", () => {
     expect(wrapper.findComponent(MockLoginView).exists()).toBe(true);
   });
 
+  it("renders Signup component via routing", async () => {
+    // create router with same configuration and guard as actual router, except with mock components attached to each router
+    const router = createRouter({
+      history: createWebHistory(process.env.BASE_URL),
+      routes: mockRoutes,
+    });
+    router.beforeEach(routerBeforeEachGuard);
+    // mount root App component
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router, testPinia],
+        stubs: ["AppTopbar"],
+      },
+    });
+    // navigate to login url
+    await router.push("/signup");
+    // assert current route is login url
+    expect(router.currentRoute.value.path).toBe("/signup");
+    // assert login component is loaded
+    expect(wrapper.findComponent(MockSignupView).exists()).toBe(true);
+  });
+
+  it("renders VerifyEmail component via routing", async () => {
+    // create router with same configuration and guard as actual router, except with mock components attached to each router
+    const router = createRouter({
+      history: createWebHistory(process.env.BASE_URL),
+      routes: mockRoutes,
+    });
+    router.beforeEach(routerBeforeEachGuard);
+    // mount root App component
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router, testPinia],
+        stubs: ["AppTopbar"],
+      },
+    });
+    // navigate to login url
+    await router.push("/verify-email");
+    // assert current route is login url
+    expect(router.currentRoute.value.path).toBe("/verify-email");
+    // assert login component is loaded
+    expect(wrapper.findComponent(MockVerifyEmail).exists()).toBe(true);
+  });
+
   it("redirects to Login when routing to User Quotes view if not logged in", async () => {
     // create router with same configuration and guard as actual router, except with mock components attached to each router
     const router = createRouter({
@@ -102,6 +148,36 @@ describe("App", () => {
     expect(router.currentRoute.value.path).toBe("/login");
     // assert login component is loaded
     expect(wrapper.findComponent(MockLoginView).exists()).toBe(true);
+  });
+
+  it("redirects to VerifyEmail when routing to User Quotes view if logged in but email not verified", async () => {
+    // create router with same configuration and guard as actual router, except with mock components attached to each router
+    const router = createRouter({
+      history: createWebHistory(process.env.BASE_URL),
+      routes: mockRoutes,
+    });
+    router.beforeEach(routerBeforeEachGuard);
+    // simulate logged in user who is not verified
+    userStore.user = { ...fakeUser, is_verified: false };
+    // navigate to my-quotes url
+    await router.push("/my-quotes");
+    // mount root App component
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router, testPinia],
+        stubs: ["AppTopbar"],
+      },
+    });
+    // assert current route is verify email url
+    expect(router.currentRoute.value.path).toBe("/verify-email");
+    // assert verify email component is loaded
+    expect(wrapper.findComponent(MockVerifyEmail).exists()).toBe(true);
+    // try to navigate to my-quotes url
+    await router.push("/my-quotes");
+    // assert current route is verify email url
+    expect(router.currentRoute.value.path).toBe("/verify-email");
+    // assert verify email component is loaded
+    expect(wrapper.findComponent(MockVerifyEmail).exists()).toBe(true);
   });
 
   it("renders User Quotes when routing to User Quotes view if logged in", async () => {

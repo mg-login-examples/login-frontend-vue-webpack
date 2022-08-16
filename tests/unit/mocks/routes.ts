@@ -3,6 +3,8 @@ import { RouteRecordRaw } from "vue-router";
 import MockAllQuotes from "./mockVues/AllQuotes.vue";
 import MockUserQuotes from "./mockVues/UserQuotes.vue";
 import MockLoginView from "./mockVues/LoginView.vue";
+import MockSignupView from "./mockVues/SignupView.vue";
+import MockVerifyEmail from "./mockVues/VerifyEmail.vue";
 
 export function getMockRoutes(
   routes: Array<RouteRecordRaw>
@@ -18,6 +20,12 @@ export function getMockRoutes(
     }
     if (routeClone.name === "login") {
       routeClone.component = MockLoginView;
+    }
+    if (routeClone.name === "signup") {
+      routeClone.component = MockSignupView;
+    }
+    if (routeClone.name === "verifyEmail") {
+      routeClone.component = MockVerifyEmail;
     }
     mockRoutes.push(routeClone);
   }

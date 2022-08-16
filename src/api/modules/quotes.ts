@@ -1,6 +1,5 @@
 import { QuoteCreate } from "@/models/quote-create.model";
 import { Quote } from "@/models/quote.model";
-import { User } from "@/models/user.model";
 import http from "./base";
 
 const quotesApi = {

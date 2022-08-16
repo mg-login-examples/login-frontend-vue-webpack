@@ -22,7 +22,7 @@ const selectors = {
   submitButton: "[data-test='login--submit-button']",
 };
 
-describe("LoginView.vue", () => {
+describe("views > LoginView.vue", () => {
   beforeEach(() => {
     mockPush.mockClear();
   });

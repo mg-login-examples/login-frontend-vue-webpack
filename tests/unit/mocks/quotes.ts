@@ -9,6 +9,7 @@ export const fakeUser2: User = {
   id: minifaker.number({ min: 1000, max: 9999 }),
   email: minifaker.email(),
   is_active: true,
+  is_verified: true,
 };
 
 export const fakeQuote: Quote = {

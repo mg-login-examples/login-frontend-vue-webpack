@@ -10,17 +10,24 @@ export const fakeUserLogin: UserLogin = {
   password: minifaker.password({ minLength: 8 }),
 };
 
-export const fakeLoginResponse: LoginResponse = {
-  id: minifaker.number({ min: 1000, max: 9999 }),
-  email: fakeUserLogin.email,
-  access_token: minifaker.uuid.toString(),
-  token_type: "bearer",
-};
-
 export const fakeUser: User = {
   id: minifaker.number({ min: 1000, max: 9999 }),
   email: fakeUserLogin.email,
   is_active: true,
+  is_verified: true,
+};
+
+export const fakeUserUnverified: User = {
+  id: minifaker.number({ min: 1000, max: 9999 }),
+  email: fakeUserLogin.email,
+  is_active: true,
+  is_verified: false,
+};
+
+export const fakeLoginResponse: LoginResponse = {
+  user: fakeUser,
+  access_token: minifaker.uuid.toString(),
+  token_type: "bearer",
 };
 
 export const mockAxiosLoginUser = () =>
@@ -30,3 +37,6 @@ export const mockAxiosAuthenticateUser = () =>
   Promise.resolve({ data: fakeUser });
 
 export const mockAxiosLogoutUser = () => Promise.resolve(null);
+
+export const mockAxiosCreateUser = () =>
+  Promise.resolve({ data: fakeLoginResponse });

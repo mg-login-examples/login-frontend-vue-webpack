@@ -8,7 +8,9 @@ import {
   mockAxiosLoginUser,
   mockAxiosAuthenticateUser,
   mockAxiosLogoutUser,
+  mockAxiosCreateUser,
 } from "../../mocks/user";
+import { UserCreate } from "@/models/user-create.model";
 
 const mockedHttpPost = http.post as jest.Mock;
 
@@ -22,11 +24,11 @@ describe("api > modules > users.ts", () => {
       process.env.VUE_APP_ADD_AUTHORIZATION_HEADER = undefined;
     });
 
-    it("makes an axios api POST call to login endpoint with username and password", async () => {
+    it("logs in user with username and password", async () => {
       mockedHttpPost.mockImplementation(mockAxiosLoginUser);
       await expect(
         usersApi.login(fakeUserLogin.email, fakeUserLogin.password, false)
-      ).resolves.toEqual(fakeLoginResponse);
+      ).resolves.toEqual(fakeUser);
       expect(http.post).toHaveBeenCalledWith(
         "/api/login/",
         expect.anything(),
@@ -37,12 +39,15 @@ describe("api > modules > users.ts", () => {
       );
     });
 
-    it("stores the access token as an authorization header after login api call when CYPRESS_DOCKER environment variable is 1", async () => {
+    it(`
+    stores the access token as an authorization header after login api call
+    if environment variable VUE_APP_ADD_AUTHORIZATION_HEADER has value true
+    `, async () => {
       process.env.VUE_APP_ADD_AUTHORIZATION_HEADER = "true";
       mockedHttpPost.mockImplementation(mockAxiosLoginUser);
       await expect(
         usersApi.login(fakeUserLogin.email, fakeUserLogin.password, false)
-      ).resolves.toEqual(fakeLoginResponse);
+      ).resolves.toEqual(fakeUser);
       expect(http.post).toHaveBeenCalledWith(
         "/api/login/",
         expect.anything(),
@@ -64,5 +69,32 @@ describe("api > modules > users.ts", () => {
     mockedHttpPost.mockImplementation(mockAxiosLogoutUser);
     await expect(usersApi.logout()).resolves.toEqual(undefined);
     expect(http.post).toHaveBeenCalledWith("/api/logout/");
+  });
+
+  it("creates a user", async () => {
+    const userCreate: UserCreate = {
+      email: fakeUser.email,
+      password: "fakepassword",
+    };
+    mockedHttpPost.mockImplementation(mockAxiosCreateUser);
+    await expect(usersApi.createUser(userCreate)).resolves.toEqual(fakeUser);
+    expect(http.post).toHaveBeenCalledWith(`/api/users/`, userCreate);
+  });
+
+  it(`
+  stores the access token as an authorization header after create user api call
+  if environment variable VUE_APP_ADD_AUTHORIZATION_HEADER has value true
+  `, async () => {
+    process.env.VUE_APP_ADD_AUTHORIZATION_HEADER = "true";
+    const userCreate: UserCreate = {
+      email: fakeUser.email,
+      password: "fakepassword",
+    };
+    mockedHttpPost.mockImplementation(mockAxiosCreateUser);
+    await expect(usersApi.createUser(userCreate)).resolves.toEqual(fakeUser);
+    expect(http.post).toHaveBeenCalledWith(`/api/users/`, userCreate);
+    expect(http.defaults.headers.common["Authorization"]).toBe(
+      `Bearer ${fakeLoginResponse.access_token}`
+    );
   });
 });

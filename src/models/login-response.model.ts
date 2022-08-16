@@ -1,6 +1,7 @@
+import { User } from "./user.model";
+
 export interface LoginResponse {
-  id: number;
-  email: string;
+  user: User;
   access_token: string;
   token_type: string;
 }

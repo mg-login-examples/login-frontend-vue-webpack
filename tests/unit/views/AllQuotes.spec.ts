@@ -7,7 +7,7 @@ import QuoteTile from "@/components/Quotes/QuoteTile.vue";
 import { useQuotesStore } from "@/store/quotes";
 import { fakeQuotes } from "../mocks/quotes";
 
-describe("AllQuotes.vue", () => {
+describe("views > AllQuotes.vue", () => {
   it("renders all quotes items", async () => {
     const wrapper = mount(AllQuotes, {
       global: {
