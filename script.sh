@@ -32,9 +32,11 @@ then
    export BACKEND_ADMIN_USER_EMAIL="test_admin@fakemail.com"
    export BACKEND_ADMIN_USER_PASSWORD="secretpwd"
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py add_admin_user $BACKEND_ADMIN_USER_EMAIL $BACKEND_ADMIN_USER_PASSWORD
-   export CYPRESS_ENV_FILE=.env_cypress.ci_e2e
    export CYPRESS_VIDEO=true
+   # export CYPRESS_TAGS=@tag1,@tag2
+   # export CYPRESS_VERIFY_TIMEOUT=100000 # Enable when running script locally and system is slow
    export CYPRESS_MAILSLURP_API_KEY=$CYPRESS_MAILSLURP_API_KEY
+   export CYPRESS_ENV_FILE=.env_cypress.ci_e2e
    export CYPRESS_ADMIN_API_LOGIN_USERNAME=$BACKEND_ADMIN_USER_EMAIL
    export CYPRESS_ADMIN_API_LOGIN_PASSWORD=$BACKEND_ADMIN_USER_PASSWORD
    # export CYPRESS_TAGS=@tag1,@tag2
