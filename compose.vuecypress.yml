@@ -10,9 +10,11 @@ services:
     environment:
       - CYPRESS_VIDEO=${CYPRESS_VIDEO-true}
       - CYPRESS_TAGS=${CYPRESS_TAGS}
-      # - CYPRESS_VERIFY_TIMEOUT=100000
+      # - CYPRESS_VERIFY_TIMEOUT=100000 # Enable for local test run due to docker slowing down system
       - CYPRESS_ENV_FILE=${CYPRESS_ENV_FILE}
       - CYPRESS_MAILSLURP_API_KEY=${CYPRESS_MAILSLURP_API_KEY}
+      - CYPRESS_ADMIN_API_LOGIN_USERNAME=${CYPRESS_ADMIN_API_LOGIN_USERNAME}
+      - CYPRESS_ADMIN_API_LOGIN_PASSWORD=${CYPRESS_ADMIN_API_LOGIN_PASSWORD}
     depends_on:
       fastapi:
         condition: service_healthy

@@ -28,11 +28,15 @@ then
    # Stop all frontend project's containers, build all frontend project's containers including backend and run e2e tests
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vuecypress.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend build
-   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py create_db_tables
-   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py add_admin_user test_admin@fakemail.com secretpwd
+   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py alembic upgrade head
+   export BACKEND_ADMIN_USER_EMAIL="test_admin@fakemail.com"
+   export BACKEND_ADMIN_USER_PASSWORD="secretpwd"
+   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py add_admin_user $BACKEND_ADMIN_USER_EMAIL $BACKEND_ADMIN_USER_PASSWORD
    export CYPRESS_ENV_FILE=.env_cypress.ci_e2e
    export CYPRESS_VIDEO=true
    export CYPRESS_MAILSLURP_API_KEY=$CYPRESS_MAILSLURP_API_KEY
+   export CYPRESS_ADMIN_API_LOGIN_USERNAME=$BACKEND_ADMIN_USER_EMAIL
+   export CYPRESS_ADMIN_API_LOGIN_PASSWORD=$BACKEND_ADMIN_USER_PASSWORD
    # export CYPRESS_TAGS=@tag1,@tag2
    export SAMESITE=none
    docker-compose -f docker-compose.yml -f compose.vuecypress.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run vueapp_test_e2e npm run test:e2e -- --headless --mode ci_e2e --browser chrome
