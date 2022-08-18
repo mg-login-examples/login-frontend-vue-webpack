@@ -28,7 +28,7 @@ then
    # Stop all frontend project's containers, build all frontend project's containers including backend and run e2e tests
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vuecypress.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend build
-   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py alembic upgrade head
+   docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi alembic upgrade head
    export BACKEND_ADMIN_USER_EMAIL="test_admin@fakemail.com"
    export BACKEND_ADMIN_USER_PASSWORD="secretpwd"
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py add_admin_user $BACKEND_ADMIN_USER_EMAIL $BACKEND_ADMIN_USER_PASSWORD
