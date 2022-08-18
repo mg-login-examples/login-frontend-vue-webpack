@@ -12,6 +12,7 @@ services:
       - CYPRESS_TAGS=${CYPRESS_TAGS}
       # - CYPRESS_VERIFY_TIMEOUT=100000
       - CYPRESS_ENV_FILE=${CYPRESS_ENV_FILE}
+      - CYPRESS_MAILSLURP_API_KEY=${CYPRESS_MAILSLURP_API_KEY}
     depends_on:
       fastapi:
         condition: service_healthy

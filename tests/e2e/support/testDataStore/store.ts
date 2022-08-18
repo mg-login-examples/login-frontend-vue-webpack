@@ -24,9 +24,16 @@ const RandomValueStore = {
     .join(" "),
 };
 
-export const WebpageValueStore = {
+const WebpageValueStore = {
   "webpage > all quotes > like quote": undefined,
   "webpage > all quotes > unlike quote": undefined,
+};
+
+const ExternalValueStore = {
+  "external > signup > email":
+    "de8c1334-5620-4e58-bd9e-ad5ab8599749@mailslurp.com",
+  "external > signup > account id": "de8c1334-5620-4e58-bd9e-ad5ab8599749",
+  "external > signup > verification code": "",
 };
 
 export function getValueFromStore(key: string) {
@@ -34,10 +41,16 @@ export function getValueFromStore(key: string) {
     return RandomValueStore[key];
   } else if (key in WebpageValueStore) {
     return WebpageValueStore[key];
+  } else if (key in ExternalValueStore) {
+    return ExternalValueStore[key];
   }
   return key;
 }
 
 export function setValueInStore(key: string, value: string) {
-  WebpageValueStore[key] = value;
+  if (key in WebpageValueStore) {
+    WebpageValueStore[key] = value;
+  } else if (key in ExternalValueStore) {
+    ExternalValueStore[key] = value;
+  }
 }

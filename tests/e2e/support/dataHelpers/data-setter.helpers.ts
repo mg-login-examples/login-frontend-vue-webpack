@@ -5,12 +5,30 @@ import AdminAPI from "./admin.api";
 export default class DataSetterHelpers {
   static async createUserIfNoUserExists(email: string, password: string) {
     try {
-      const userId = (await UserAPI.login(email, password)).id;
+      const userId = (await UserAPI.login(email, password)).user.id;
       return AdminAPI.getUser(userId);
     } catch (error) {
       const response = <AxiosResponse>error.response;
       if (response.status === 401) {
-        return AdminAPI.createUser(email, password);
+        const user = await AdminAPI.createUser(email, password);
+        user.is_verified = true;
+        await AdminAPI.updateUser(user);
+        return user;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  static async deleteUserIfUserExists(email: string, password: string) {
+    try {
+      const userId = (await UserAPI.login(email, password)).user.id;
+      await AdminAPI.deleteUser(userId);
+      return;
+    } catch (error) {
+      const response = <AxiosResponse>error.response;
+      if (response.status === 401) {
+        return;
       } else {
         throw error;
       }

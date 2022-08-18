@@ -41,14 +41,6 @@
           class="pl-2 underline"
           data-test="email-verification--resend-email"
         >
-          <span v-if="resendWaitTime > 0">
-            Try again in
-            <span data-test="email-verification--resend-email-wait-time">{{
-              resendWaitTime
-            }}</span>
-            seconds
-          </span>
-          <span v-if="resendWaitTime <= 0">Send Email</span>
           {{
             resendWaitTime > 0
               ? `Try again in ${resendWaitTime} seconds`

@@ -18,6 +18,14 @@ export default class AdminAPI {
     return `${this.admin_api_base_url}/resource/users/${userId}/`;
   }
 
+  static updateUserById(userId: number) {
+    return `${this.admin_api_base_url}/resource/users/${userId}/`;
+  }
+
+  static deleteUserByIdUrl(userId: number) {
+    return `${this.admin_api_base_url}/resource/users/${userId}/`;
+  }
+
   static async setAdminAPIAccessToken() {
     if (!this.admin_api_access_token_header) {
       const formData = new FormData();
@@ -63,6 +71,29 @@ export default class AdminAPI {
         },
       })
     ).data;
+  }
+
+  static async updateUser(user: UserModel) {
+    await this.setAdminAPIAccessToken();
+    await axios({
+      method: "PUT",
+      url: this.updateUserById(user.id),
+      data: user,
+      headers: {
+        "Admin-Authorization": `${this.admin_api_access_token_header}`,
+      },
+    });
+  }
+
+  static async deleteUser(userId: number) {
+    await this.setAdminAPIAccessToken();
+    await axios({
+      method: "DELETE",
+      url: this.deleteUserByIdUrl(userId),
+      headers: {
+        "Admin-Authorization": `${this.admin_api_access_token_header}`,
+      },
+    });
   }
 
   static async getQuotes() {

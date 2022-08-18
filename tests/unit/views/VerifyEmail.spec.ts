@@ -19,8 +19,6 @@ const selectors = {
   verificationCodeInput: "[data-test='email-verification--code-input']",
   submitButton: "[data-test='email-verification--submit-button']",
   resendEmailButton: "[data-test='email-verification--resend-email']",
-  resendEmailWaitTime:
-    "[data-test='email-verification--resend-email-wait-time']",
 };
 
 describe("views > VerifyEmail.vue", () => {
@@ -199,10 +197,18 @@ describe("views > VerifyEmail.vue", () => {
     await Vue.nextTick();
     // assert store resend email function was called
     expect(userStore.resendEmail).toBeCalled();
-    // wait for countdown to reset
+    // wait for coundown to reset
     await Vue.nextTick();
-    // assert countdown is visible
-    expect(wrapper.find(selectors.resendEmailWaitTime).isVisible()).toBe(true);
+    // assert countdown reset to 30 sec
+    const countdownButtonText = (countdown: number) =>
+      `Try again in ${countdown} seconds`;
+    expect(wrapper.find(selectors.resendEmailButton).text()).toBe(
+      countdownButtonText(30)
+    );
+    // assert resend button is disabled
+    expect(
+      wrapper.find(selectors.resendEmailButton).attributes("disabled")
+    ).toBeDefined();
   });
 
   it("handles error when resend email fails", async () => {
@@ -232,7 +238,11 @@ describe("views > VerifyEmail.vue", () => {
     // assert store resend email function was called
     expect(userStore.resendEmail).toBeCalled();
     // assert countdown not visible
-    expect(wrapper.find(selectors.resendEmailWaitTime).exists()).toBe(false);
+    expect(wrapper.find(selectors.resendEmailButton).text()).toBe("Send Email");
+    // assert resend button is not disabled
+    expect(
+      wrapper.find(selectors.resendEmailButton).attributes("disabled")
+    ).toBeUndefined();
   });
 
   it("disables resend button during countdown, and resets countdown after resend email button is clicked", async () => {
@@ -254,11 +264,17 @@ describe("views > VerifyEmail.vue", () => {
       wrapper.find(selectors.resendEmailButton).attributes("disabled")
     ).toBeDefined();
     // assert initial countdown time is 30 sec
-    expect(wrapper.find(selectors.resendEmailWaitTime).text()).toBe("30");
+    const countdownButtonText = (countdown: number) =>
+      `Try again in ${countdown} seconds`;
+    expect(wrapper.find(selectors.resendEmailButton).text()).toBe(
+      countdownButtonText(30)
+    );
     // wait for 2 seconds
     await new Promise((resolve) => setTimeout(resolve, 2000));
     // assert countdown reduced by 2 seconds
-    expect(wrapper.find(selectors.resendEmailWaitTime).text()).toBe("28");
+    expect(wrapper.find(selectors.resendEmailButton).text()).toBe(
+      countdownButtonText(28)
+    );
     // reset counter to 2 seconds to quicken countdown end
     wrapper.vm.resendWaitTime = 2;
     // wait for 3 seconds
@@ -268,7 +284,7 @@ describe("views > VerifyEmail.vue", () => {
       wrapper.find(selectors.resendEmailButton).attributes("disabled")
     ).toBeUndefined();
     // assert countdown not visible
-    expect(wrapper.find(selectors.resendEmailWaitTime).exists()).toBe(false);
+    expect(wrapper.find(selectors.resendEmailButton).text()).toBe("Send Email");
     // resend email
     wrapper.find(selectors.resendEmailButton).trigger("click");
     await Vue.nextTick();
@@ -277,7 +293,9 @@ describe("views > VerifyEmail.vue", () => {
     // wait for coundown to reset
     await Vue.nextTick();
     // assert countdown reset to 30 sec
-    expect(wrapper.find(selectors.resendEmailWaitTime).text()).toBe("30");
+    expect(wrapper.find(selectors.resendEmailButton).text()).toBe(
+      countdownButtonText(30)
+    );
     // assert resend button is disabled
     expect(
       wrapper.find(selectors.resendEmailButton).attributes("disabled")

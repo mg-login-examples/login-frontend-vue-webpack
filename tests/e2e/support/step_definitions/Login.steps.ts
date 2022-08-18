@@ -27,11 +27,11 @@ Given("I am not logged in", () => {
   TopbarPage.assertLogoutButtonIsNotVisible();
 });
 
-When("I enter the user email {string}", (email: string) => {
+When("I enter the login user email {string}", (email: string) => {
   LoginPage.enterUserEmail(email);
 });
 
-When("I enter the user password {string}", (password: string) => {
+When("I enter the login user password {string}", (password: string) => {
   LoginPage.enterUserPassword(password);
 });
 
@@ -43,7 +43,7 @@ When("I click on login button", () => {
   LoginPage.clickOnLoginButton();
 });
 
-When("I click on toggle show password", () => {
+When("I click on toggle show login password", () => {
   LoginPage.clickOnShowPassword();
 });
 
@@ -59,10 +59,10 @@ Then("I am redirected to login page", () => {
   LoginPage.assertIsOpen();
 });
 
-Then("the password text is hidden", () => {
+Then("the login password text is hidden", () => {
   LoginPage.assertPasswordInputIsOfTypePassword();
 });
 
-Then("the password text is visible", () => {
+Then("the login password text is visible", () => {
   LoginPage.assertPasswordInputIsOfTypeText();
 });

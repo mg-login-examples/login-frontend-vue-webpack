@@ -75,7 +75,9 @@ async function login() {
     rememberMe.value
   );
   if (isLoginSuccess) {
-    if (props.user_requested_route) {
+    if (!userStore.user?.is_verified) {
+      router.push("/verify-email");
+    } else if (props.user_requested_route) {
       router.push(props.user_requested_route as string);
     } else {
       router.push("/");

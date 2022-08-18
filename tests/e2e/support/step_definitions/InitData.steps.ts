@@ -1,5 +1,6 @@
 import { Given, Before } from "cypress-cucumber-preprocessor/steps";
 
+import { getValueFromStore } from "../testDataStore/store";
 import CyDataSetterHelpers from "../dataHelpers/cy-data-setter.helpers";
 
 Before(() => {
@@ -21,6 +22,15 @@ Given(
   "an invalid user login with email {string} and password {string}",
   (email: string, password: string) => {
     CyDataSetterHelpers.assertLoginInvalid(email, password);
+  }
+);
+
+// Uses external value
+Given(
+  "no user with email {string} and password {string} exists",
+  (email: string, password: string) => {
+    email = getValueFromStore(email);
+    CyDataSetterHelpers.deleteUserIfUserExists(email, password);
   }
 );
 

@@ -4,6 +4,7 @@ import { createTestingPinia } from "@pinia/testing";
 
 import LoginView from "@/views/LoginView.vue";
 import { useUserStore } from "@/store/user";
+import { fakeUser } from "../mocks/user";
 
 const mockPush = jest.fn();
 jest.mock("vue-router", () => ({
@@ -38,9 +39,12 @@ describe("views > LoginView.vue", () => {
         stubs: { FontAwesomeIcon: true },
       },
     });
-    // mock store login action to return login successful
+    // mock store login action to return login successful for an unverified user
     const userStore = useUserStore();
-    (userStore.login as jest.Mock).mockReturnValue(true);
+    (userStore.login as jest.Mock).mockImplementation(() => {
+      userStore.user = { ...fakeUser, is_verified: true };
+      return true;
+    });
     // enter user email
     wrapper.find(selectors.usernameInput).setValue(userEmail);
     expect(
@@ -71,6 +75,45 @@ describe("views > LoginView.vue", () => {
     expect(mockPush).toHaveBeenCalledWith("/");
   });
 
+  it("opens email verification page on successful user logins if user is not verified", async () => {
+    // init test values
+    const userEmail = "test@example.com";
+    const userPassword = "secretpassword";
+    // set prop user requested route to simulate router passing this value
+    const user_requested_route_before = "/my-quotes";
+    // open login view
+    const wrapper = mount(LoginView, {
+      global: {
+        plugins: [createTestingPinia()],
+        stubs: { FontAwesomeIcon: true },
+      },
+      props: { user_requested_route: user_requested_route_before },
+    });
+    // mock store login action to return login successful for an unverified user
+    const userStore = useUserStore();
+    (userStore.login as jest.Mock).mockImplementation(() => {
+      userStore.user = { ...fakeUser, is_verified: false };
+      return true;
+    });
+    // enter user email
+    wrapper.find(selectors.usernameInput).setValue(userEmail);
+    expect(
+      (wrapper.find(selectors.usernameInput).element as HTMLInputElement).value
+    ).toBe(userEmail);
+    // enter user password
+    wrapper.find(selectors.passwordInput).setValue(userPassword);
+    expect(
+      (wrapper.find(selectors.passwordInput).element as HTMLInputElement).value
+    ).toBe(userPassword);
+    // click login
+    wrapper.find(selectors.submitButton).trigger("click");
+    await Vue.nextTick();
+    // assert user store login function called
+    expect(userStore.login).toBeCalledWith(userEmail, userPassword, false);
+    // assert router redirected to user requested route
+    expect(mockPush).toHaveBeenCalledWith("/verify-email");
+  });
+
   it("opens user requested route on successful user logins if redirected to login", async () => {
     // init test values
     const userEmail = "test@example.com";
@@ -85,9 +128,12 @@ describe("views > LoginView.vue", () => {
       },
       props: { user_requested_route: user_requested_route_before },
     });
-    // mock store login action to return login successful
+    // mock store login action to return login successful for an verified user
     const userStore = useUserStore();
-    (userStore.login as jest.Mock).mockReturnValue(true);
+    (userStore.login as jest.Mock).mockImplementation(() => {
+      userStore.user = { ...fakeUser, is_verified: true };
+      return true;
+    });
     // enter user email
     wrapper.find(selectors.usernameInput).setValue(userEmail);
     expect(

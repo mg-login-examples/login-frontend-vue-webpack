@@ -32,7 +32,8 @@ then
    docker-compose -f docker-compose.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run fastapi python main.py add_admin_user test_admin@fakemail.com secretpwd
    export CYPRESS_ENV_FILE=.env_cypress.ci_e2e
    export CYPRESS_VIDEO=true
-   # export CYPRESS_TAGS=@focus
+   export CYPRESS_MAILSLURP_API_KEY=$CYPRESS_MAILSLURP_API_KEY
+   # export CYPRESS_TAGS=@tag1,@tag2
    export SAMESITE=none
    docker-compose -f docker-compose.yml -f compose.vuecypress.yml -f compose.fastapi.yml -f compose.mysql.yml -p frontend run vueapp_test_e2e npm run test:e2e -- --headless --mode ci_e2e --browser chrome
 elif [ $case = "launch-fullstack-local" ]
@@ -45,6 +46,7 @@ then
    # Stop all backend project's containers
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
 else
+   echo $CYPRESS_MAILSLURP_API_KEY
    echo "no option passed"
    echo "available options are:
     - launch-frontend-local
