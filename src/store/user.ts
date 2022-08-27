@@ -91,5 +91,15 @@ export const useUserStore = defineStore("user", {
         return false;
       }
     },
+    async sendEmailWithPasswordResetLink(userEmail: string) {
+      try {
+        await backendApi.users.sendEmailWithPasswordResetLink(userEmail);
+        return true;
+      } catch (error) {
+        const errorStore = useErrorsStore();
+        errorStore.handleError(error);
+        return false;
+      }
+    },
   },
 });

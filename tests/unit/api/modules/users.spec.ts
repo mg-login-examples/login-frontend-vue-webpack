@@ -9,6 +9,7 @@ import {
   mockAxiosAuthenticateUser,
   mockAxiosLogoutUser,
   mockAxiosCreateUser,
+  mockAxiosSendEmailWithPasswordResetLink,
 } from "../../mocks/user";
 import { UserCreate } from "@/models/user-create.model";
 
@@ -96,5 +97,18 @@ describe("api > modules > users.ts", () => {
     expect(http.defaults.headers.common["Authorization"]).toBe(
       `Bearer ${fakeLoginResponse.access_token}`
     );
+  });
+
+  it("sends email with password reset link", async () => {
+    const email = fakeUser.email;
+    mockedHttpPost.mockImplementation(mockAxiosSendEmailWithPasswordResetLink);
+    await expect(
+      usersApi.sendEmailWithPasswordResetLink(email)
+    ).resolves.toEqual(undefined);
+    expect(http.post).toHaveBeenCalledWith(
+      `/api/password-reset-link/`,
+      expect.anything()
+    );
+    expect((http.post as jest.Mock).mock.calls[0][1]).toEqual({ email });
   });
 });

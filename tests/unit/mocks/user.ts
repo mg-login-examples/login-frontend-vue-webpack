@@ -40,3 +40,7 @@ export const mockAxiosLogoutUser = () => Promise.resolve(null);
 
 export const mockAxiosCreateUser = () =>
   Promise.resolve({ data: fakeLoginResponse });
+
+export const mockAxiosSendEmailWithPasswordResetLink = () => {
+  Promise.resolve();
+};

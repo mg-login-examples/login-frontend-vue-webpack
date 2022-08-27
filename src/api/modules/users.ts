@@ -41,6 +41,9 @@ const usersApi = {
     }
     return loginResponse.user;
   },
+  async sendEmailWithPasswordResetLink(userEmail: string): Promise<void> {
+    await http.post("/api/password-reset-link/", { email: userEmail });
+  },
 };
 
 export default usersApi;

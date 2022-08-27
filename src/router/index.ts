@@ -8,6 +8,7 @@ import AllQuotes from "../views/AllQuotes.vue";
 import LoginView from "../views/LoginView.vue";
 import SignupView from "../views/SignupView.vue";
 import VerifyEmail from "../views/VerifyEmail.vue";
+import ForgotPassword from "../views/ForgotPassword.vue";
 import { useUserStore } from "@/store/user";
 
 export const routes: Array<RouteRecordRaw> = [
@@ -40,6 +41,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/verify-email",
     name: "verifyEmail",
     component: VerifyEmail,
+  },
+  {
+    path: "/forgot-password",
+    name: "forgotPassword",
+    component: ForgotPassword,
   },
 ];
 

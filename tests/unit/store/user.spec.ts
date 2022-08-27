@@ -18,6 +18,8 @@ const mockBackendApiVerifyEmail = backendApi.emailVerifications
   .verifyEmail as jest.Mock;
 const mockBackendApiResendEmail = backendApi.emailVerifications
   .resendEmail as jest.Mock;
+const mockBackendApiSendEmailWithPasswordResetLink = backendApi.users
+  .sendEmailWithPasswordResetLink as jest.Mock;
 
 describe("store > user.ts", () => {
   beforeEach(() => {
@@ -31,6 +33,7 @@ describe("store > user.ts", () => {
     mockBackendApiCreateUser.mockReset();
     mockBackendApiVerifyEmail.mockReset();
     mockBackendApiResendEmail.mockReset();
+    mockBackendApiSendEmailWithPasswordResetLink.mockReset();
   });
 
   it("logs in user with email and password", async () => {
@@ -243,5 +246,44 @@ describe("store > user.ts", () => {
     expect(resendEmailResponse).toBe(false);
     // assert error handler called with api error
     expect(mockErrorsStore.handleError).toHaveBeenCalledWith(resendEmailError);
+  });
+
+  it("sends email with password reset link", async () => {
+    // init test values
+    const testEmail = "test@email.com";
+    // init user store
+    const userStore = useUserStore();
+    // invoke store send email with password reset link action
+    const sendEmailWithPasswordResetLinkResponse =
+      await userStore.sendEmailWithPasswordResetLink(testEmail);
+    // assert success return
+    expect(sendEmailWithPasswordResetLinkResponse).toBe(true);
+    // assert api resend email function called
+    expect(mockBackendApiSendEmailWithPasswordResetLink).toHaveBeenCalledWith(
+      testEmail
+    );
+  });
+
+  it("handles send email with password reset link api error", async () => {
+    // init test values
+    const testEmail = "test@email.com";
+    // mock api error return
+    const sendEmailWithPasswordResetLinkError = Error(
+      "send email with password reset link error"
+    );
+    mockBackendApiSendEmailWithPasswordResetLink.mockRejectedValue(
+      sendEmailWithPasswordResetLinkError
+    );
+    // init user store
+    const userStore = useUserStore();
+    // invoke store resend email action
+    const sendEmailWithPasswordResetLinkResponse =
+      await userStore.sendEmailWithPasswordResetLink(testEmail);
+    // assert failure return
+    expect(sendEmailWithPasswordResetLinkResponse).toBe(false);
+    // assert error handler called with api error
+    expect(mockErrorsStore.handleError).toHaveBeenCalledWith(
+      sendEmailWithPasswordResetLinkError
+    );
   });
 });

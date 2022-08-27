@@ -1,5 +1,5 @@
 import * as Vue from "vue";
-import { mount } from "@vue/test-utils";
+import { mount, RouterLinkStub } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
 
 import LoginView from "@/views/LoginView.vue";
@@ -21,6 +21,8 @@ const selectors = {
     "[data-test='login--show-password-button'] font-awesome-icon-stub",
   rememberMeCheckbox: "[data-test='login--remember-me-checkbox']",
   submitButton: "[data-test='login--submit-button']",
+  signupLink: "[data-test='login--signup-link']",
+  forgotPasswordLink: "[data-test='login--forgot-password-link']",
 };
 
 describe("views > LoginView.vue", () => {
@@ -36,7 +38,7 @@ describe("views > LoginView.vue", () => {
     const wrapper = mount(LoginView, {
       global: {
         plugins: [createTestingPinia()],
-        stubs: { FontAwesomeIcon: true },
+        stubs: { RouterLink: RouterLinkStub, FontAwesomeIcon: true },
       },
     });
     // mock store login action to return login successful for an unverified user
@@ -85,7 +87,7 @@ describe("views > LoginView.vue", () => {
     const wrapper = mount(LoginView, {
       global: {
         plugins: [createTestingPinia()],
-        stubs: { FontAwesomeIcon: true },
+        stubs: { RouterLink: RouterLinkStub, FontAwesomeIcon: true },
       },
       props: { user_requested_route: user_requested_route_before },
     });
@@ -124,7 +126,7 @@ describe("views > LoginView.vue", () => {
     const wrapper = mount(LoginView, {
       global: {
         plugins: [createTestingPinia()],
-        stubs: { FontAwesomeIcon: true },
+        stubs: { RouterLink: RouterLinkStub, FontAwesomeIcon: true },
       },
       props: { user_requested_route: user_requested_route_before },
     });
@@ -161,7 +163,7 @@ describe("views > LoginView.vue", () => {
     const wrapper = mount(LoginView, {
       global: {
         plugins: [createTestingPinia()],
-        stubs: { FontAwesomeIcon: true },
+        stubs: { RouterLink: RouterLinkStub, FontAwesomeIcon: true },
       },
     });
     // mock store login action to return login unsuccessful
@@ -192,7 +194,7 @@ describe("views > LoginView.vue", () => {
     const wrapper = mount(LoginView, {
       global: {
         plugins: [createTestingPinia()],
-        stubs: { FontAwesomeIcon: true },
+        stubs: { RouterLink: RouterLinkStub, FontAwesomeIcon: true },
       },
     });
     // enter password
@@ -217,5 +219,25 @@ describe("views > LoginView.vue", () => {
     expect(wrapper.find(selectors.showPasswordIcon).attributes("icon")).toBe(
       "eye-slash"
     );
+  });
+
+  it("renders signup link and forgot password with url", () => {
+    // open login view
+    const wrapper = mount(LoginView, {
+      global: {
+        plugins: [createTestingPinia()],
+        stubs: { RouterLink: RouterLinkStub, FontAwesomeIcon: true },
+      },
+    });
+    expect(
+      wrapper.find(selectors.signupLink).findComponent(RouterLinkStub).props()
+        .to
+    ).toBe("/signup");
+    expect(
+      wrapper
+        .find(selectors.forgotPasswordLink)
+        .findComponent(RouterLinkStub)
+        .props().to
+    ).toBe("/forgot-password");
   });
 });

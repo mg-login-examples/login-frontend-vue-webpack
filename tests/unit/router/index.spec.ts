@@ -1,4 +1,3 @@
-import * as Vue from "vue";
 import { mount } from "@vue/test-utils";
 import { createRouter, createWebHistory } from "vue-router";
 import { createTestingPinia } from "@pinia/testing";
@@ -12,6 +11,7 @@ import MockUserQuotes from "../mocks/mockVues/UserQuotes.vue";
 import MockLoginView from "../mocks/mockVues/LoginView.vue";
 import MockSignupView from "../mocks/mockVues/SignupView.vue";
 import MockVerifyEmail from "../mocks/mockVues/VerifyEmail.vue";
+import MockForgotPassword from "../mocks/mockVues/ForgotPassword.vue";
 import { fakeUser } from "../mocks/user";
 
 const mockRoutes = getMockRoutes(routes);
@@ -46,9 +46,9 @@ describe("App", () => {
         stubs: ["AppTopbar"],
       },
     });
-    // navigate to home url
+    // navigate to all quotes url
     await router.push("/");
-    // assert current route is home url
+    // assert current route is all quotes url
     expect(router.currentRoute.value.path).toBe("/");
     // assert all quotes component is loaded
     expect(wrapper.findComponent(MockAllQuotes).exists()).toBe(true);
@@ -90,11 +90,11 @@ describe("App", () => {
         stubs: ["AppTopbar"],
       },
     });
-    // navigate to login url
+    // navigate to sign up url
     await router.push("/signup");
-    // assert current route is login url
+    // assert current route is sign up url
     expect(router.currentRoute.value.path).toBe("/signup");
-    // assert login component is loaded
+    // assert sign up component is loaded
     expect(wrapper.findComponent(MockSignupView).exists()).toBe(true);
   });
 
@@ -112,12 +112,34 @@ describe("App", () => {
         stubs: ["AppTopbar"],
       },
     });
-    // navigate to login url
+    // navigate to verify email url
     await router.push("/verify-email");
-    // assert current route is login url
+    // assert current route is verify email url
     expect(router.currentRoute.value.path).toBe("/verify-email");
-    // assert login component is loaded
+    // assert verify email component is loaded
     expect(wrapper.findComponent(MockVerifyEmail).exists()).toBe(true);
+  });
+
+  it("renders ForgotPassword component via routing", async () => {
+    // create router with same configuration and guard as actual router, except with mock components attached to each router
+    const router = createRouter({
+      history: createWebHistory(process.env.BASE_URL),
+      routes: mockRoutes,
+    });
+    router.beforeEach(routerBeforeEachGuard);
+    // mount root App component
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router, testPinia],
+        stubs: ["AppTopbar"],
+      },
+    });
+    // navigate to forgot password url
+    await router.push("/forgot-password");
+    // assert current route is forgot password url
+    expect(router.currentRoute.value.path).toBe("/forgot-password");
+    // assert forgot password component is loaded
+    expect(wrapper.findComponent(MockForgotPassword).exists()).toBe(true);
   });
 
   it("redirects to Login when routing to User Quotes view if not logged in", async () => {
@@ -129,7 +151,7 @@ describe("App", () => {
     router.beforeEach(routerBeforeEachGuard);
     // assert user is not logged in
     expect(userStore.user).toBe(null);
-    // navigate to my-quotes url
+    // navigate to user quotes url
     await router.push("/my-quotes");
     // mount root App component
     const wrapper = mount(App, {
@@ -142,9 +164,9 @@ describe("App", () => {
     expect(router.currentRoute.value.path).toBe("/login");
     // assert login component is loaded
     expect(wrapper.findComponent(MockLoginView).exists()).toBe(true);
-    // try to navigate to my-quotes url
+    // try to navigate to user quotes url
     await router.push("/my-quotes");
-    // assert current route is login url
+    // assert current route is user url
     expect(router.currentRoute.value.path).toBe("/login");
     // assert login component is loaded
     expect(wrapper.findComponent(MockLoginView).exists()).toBe(true);
@@ -159,7 +181,7 @@ describe("App", () => {
     router.beforeEach(routerBeforeEachGuard);
     // simulate logged in user who is not verified
     userStore.user = { ...fakeUser, is_verified: false };
-    // navigate to my-quotes url
+    // navigate to user quotes url
     await router.push("/my-quotes");
     // mount root App component
     const wrapper = mount(App, {
@@ -172,7 +194,7 @@ describe("App", () => {
     expect(router.currentRoute.value.path).toBe("/verify-email");
     // assert verify email component is loaded
     expect(wrapper.findComponent(MockVerifyEmail).exists()).toBe(true);
-    // try to navigate to my-quotes url
+    // try to navigate to user quotes url
     await router.push("/my-quotes");
     // assert current route is verify email url
     expect(router.currentRoute.value.path).toBe("/verify-email");
@@ -189,7 +211,7 @@ describe("App", () => {
     router.beforeEach(routerBeforeEachGuard);
     // simulate logged in user
     userStore.user = fakeUser;
-    // navigate to my-quotes url
+    // navigate to user quotes url
     await router.push("/my-quotes");
     // mount root App component
     const wrapper = mount(App, {
@@ -198,9 +220,9 @@ describe("App", () => {
         stubs: ["AppTopbar"],
       },
     });
-    // assert current route is my-quotes url
+    // assert current route is user quotes url
     expect(router.currentRoute.value.path).toBe("/my-quotes");
-    // assert my quotes component is loaded
+    // assert user quotes component is loaded
     expect(wrapper.findComponent(MockUserQuotes).exists()).toBe(true);
   });
 });

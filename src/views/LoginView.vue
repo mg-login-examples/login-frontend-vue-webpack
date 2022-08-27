@@ -35,16 +35,34 @@
           v-model="rememberMe"
           data-test="login--remember-me-checkbox"
         />
-        <div class="mx-2">Remember Me</div>
+        <div class="mx-2 text-sm">Remember Me</div>
+        <div class="grow"></div>
+        <router-link
+          to="/forgot-password"
+          class="underline text-xs"
+          data-test="login--forgot-password-link"
+        >
+          Forgot password?
+        </router-link>
       </div>
-      <div>
+      <div class="w-72 my-3">
         <button
           @click="login"
-          class="w-72 my-3 p-2 bg-white bg-gradient-to-r from-orange-300 via-red-300 to-red-500"
+          class="w-72 p-2 bg-white bg-gradient-to-r from-orange-300 via-red-300 to-red-500"
           data-test="login--submit-button"
         >
           LOGIN
         </button>
+      </div>
+      <div class="w-72 my-3 flex text-xs">
+        <span class="mr-2">Need an account? </span>
+        <router-link
+          to="/signup"
+          class="underline"
+          data-test="login--signup-link"
+        >
+          SIGN UP
+        </router-link>
       </div>
     </div>
   </div>
