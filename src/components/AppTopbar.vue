@@ -14,6 +14,13 @@
       >
         My Quotes
       </router-link>
+      <router-link
+        to="/user-notes"
+        class="px-4"
+        data-test="topbar--user-notes-link"
+      >
+        User Notes
+      </router-link>
       <div class="flex-grow"></div>
       <router-link
         v-if="!userStore.user && userStore.authAttemptedOnce"

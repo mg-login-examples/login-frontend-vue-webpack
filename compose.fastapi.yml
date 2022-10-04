@@ -26,10 +26,10 @@ services:
       - CORS_ORIGINS_SET=${CORS_ORIGINS_SET:-Development}
       - SAMESITE=${SAMESITE:-lax}
       - SECURE_COOKIES=${SECURE_COOKIES:-False}
-    healthcheck:
-      test: wget --no-verbose --tries=1 -O /dev/null http://localhost:8018/docs
-      timeout: 20s
-      retries: 10
+    # healthcheck:
+    #   test: wget --no-verbose --tries=1 -O /dev/null http://localhost:8018/docs
+    #   timeout: 20s
+    #   retries: 10
     # deploy:
     #   resources:
     #     limits:

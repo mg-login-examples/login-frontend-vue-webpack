@@ -6,6 +6,7 @@ import MockLoginView from "./mockVues/LoginView.vue";
 import MockSignupView from "./mockVues/SignupView.vue";
 import MockVerifyEmail from "./mockVues/VerifyEmail.vue";
 import MockForgotPassword from "./mockVues/ForgotPassword.vue";
+import MockUserNotes from "./mockVues/UserNotes.vue";
 
 export function getMockRoutes(
   routes: Array<RouteRecordRaw>
@@ -30,6 +31,9 @@ export function getMockRoutes(
     }
     if (routeClone.name === "forgotPassword") {
       routeClone.component = MockForgotPassword;
+    }
+    if (routeClone.name === "userNotes") {
+      routeClone.component = MockUserNotes;
     }
     mockRoutes.push(routeClone);
   }
