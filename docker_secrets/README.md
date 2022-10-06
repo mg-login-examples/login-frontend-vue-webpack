@@ -1,0 +1,1 @@
+Add a text file named: "mailslurp_api_key.txt" with your mailslurp api key

@@ -19,11 +19,11 @@ services:
     networks:
       - backend
     volumes:
-      - mysql-data:/var/lib/${MYSQL_DOCKER_VOLUME-mysql}
+      - mysql-data:/var/lib/mysql
 
 volumes:
   mysql-data:
 
 secrets:
   mysql-password:
-    file: backend/db/mysql_pwd.txt
+    file: backend/docker_secrets/mysql_pwd.txt

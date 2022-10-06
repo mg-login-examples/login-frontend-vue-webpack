@@ -7,6 +7,8 @@ services:
     build:
       context: .
       dockerfile: ./cypress.Dockerfile
+    secrets:
+      - mailslurp_api_key
     environment:
       - CYPRESS_VIDEO=${CYPRESS_VIDEO-true}
       - CYPRESS_TAGS=${CYPRESS_TAGS}
@@ -16,10 +18,14 @@ services:
       - CYPRESS_ADMIN_API_LOGIN_USERNAME=${CYPRESS_ADMIN_API_LOGIN_USERNAME}
       - CYPRESS_ADMIN_API_LOGIN_PASSWORD=${CYPRESS_ADMIN_API_LOGIN_PASSWORD}
     depends_on:
-      fastapi:
-        condition: service_healthy
+      - fastapi
+        # condition: service_healthy
     #   vueapp_serve:
     #     condition: service_healthy
     volumes:
       - ./src:/app/src
       - ./tests:/app/tests
+
+secrets:
+  mailslurp_api_key:
+    file: docker_secrets/mailslurp_api_key.txt
