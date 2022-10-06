@@ -9,7 +9,7 @@ on:
 
 jobs:
   unit-tests:
-    name: Deploy to EC2
+    name: Run unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -45,7 +45,7 @@ jobs:
             rm results.zip &&
             curl http://localhost:5050/allure-docker-service/generate-report?project_id=frontend-unit
   e2e-tests:
-    name: Run E2E Tests And Send Results To Allure Docker Service
+    name: Run e2e tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
