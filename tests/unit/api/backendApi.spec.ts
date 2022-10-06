@@ -5,6 +5,7 @@ import backendApi from "@/api/backendApi";
 import users from "@/api/modules/users";
 import quotes from "@/api/modules/quotes";
 import emailVerifications from "@/api/modules/emailVerifications";
+import userNotes from "@/api/modules/user-notes";
 
 describe("backend api module", () => {
   it("includes users module in api module", () => {
@@ -18,5 +19,9 @@ describe("backend api module", () => {
   it("includes email verifications module in api module", () => {
     expect(backendApi).toHaveProperty("emailVerifications");
     expect(backendApi.emailVerifications).toBe(emailVerifications);
+  });
+  it("includes user notes module in api module", () => {
+    expect(backendApi).toHaveProperty("userNotes");
+    expect(backendApi.userNotes).toBe(userNotes);
   });
 });

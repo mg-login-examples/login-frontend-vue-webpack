@@ -1,4 +1,4 @@
-@quote-feature
+@signup
 Feature: Signup
 
   Scenario: Signup and verify email

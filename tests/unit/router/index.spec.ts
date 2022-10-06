@@ -12,6 +12,7 @@ import MockLoginView from "../mocks/mockVues/LoginView.vue";
 import MockSignupView from "../mocks/mockVues/SignupView.vue";
 import MockVerifyEmail from "../mocks/mockVues/VerifyEmail.vue";
 import MockForgotPassword from "../mocks/mockVues/ForgotPassword.vue";
+import MockUserNotes from "../mocks/mockVues/UserNotes.vue";
 import { fakeUser } from "../mocks/user";
 
 const mockRoutes = getMockRoutes(routes);
@@ -224,5 +225,29 @@ describe("App", () => {
     expect(router.currentRoute.value.path).toBe("/my-quotes");
     // assert user quotes component is loaded
     expect(wrapper.findComponent(MockUserQuotes).exists()).toBe(true);
+  });
+
+  it("renders User Notes when routing User Notes view if logged in", async () => {
+    // create router with same configuration and guard as actual router, except with mock components attached to each router
+    const router = createRouter({
+      history: createWebHistory(process.env.BASE_URL),
+      routes: mockRoutes,
+    });
+    router.beforeEach(routerBeforeEachGuard);
+    // simulate logged in user
+    userStore.user = fakeUser;
+    // navigate to user quotes url
+    await router.push("/user-notes");
+    // mount root App component
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router, testPinia],
+        stubs: ["AppTopbar"],
+      },
+    });
+    // assert current route is user quotes url
+    expect(router.currentRoute.value.path).toBe("/user-notes");
+    // assert user quotes component is loaded
+    expect(wrapper.findComponent(MockUserNotes).exists()).toBe(true);
   });
 });

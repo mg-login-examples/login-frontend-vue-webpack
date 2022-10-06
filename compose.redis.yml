@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  redis_cache:
+    image: redis
+    command: bash -c '[ "$$REDIS_PASS_FILE" ] &&
+      ( cat "$$REDIS_PASS_FILE" | xargs -0 redis-server --requirepass ) || redis-server'
+    restart: always
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASS_FILE="/run/secrets/redis-pass"
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+    secrets:
+      - redis-pass
+    networks:
+      - backend
+    volumes:
+      - redis-data:/var/lib/${REDIS_DOCKER_VOLUME-redis}
+
+volumes:
+  redis-data:
+
+secrets:
+  redis-pass:
+    file: backend/docker_secrets/redis_pwd.txt

@@ -1,7 +1,0 @@
-{
-  "pluginsFile": "tests/e2e/plugins/index.js",
-  "env": {
-    "allure": true,
-    "allureResultsPath": "tests/e2e/allure-results"
-  }
-}

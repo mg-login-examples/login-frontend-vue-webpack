@@ -16,6 +16,7 @@ jest.mock("vue-router", () => ({
 const selectors = {
   allQuotesPageLink: "[data-test='topbar--all-quotes-link']",
   myQuotesPageLink: "[data-test='topbar--user-quotes-link']",
+  userNotesPageLink: "[data-test='topbar--user-notes-link']",
   loginPageLink: "[data-test='topbar--login-link']",
   logoutButton: "[data-test='topbar--logout-button']",
   usernameLabel: "[data-test='topbar--user-name']",
@@ -40,6 +41,12 @@ describe("AppTopbar.vue", () => {
     expect(myQuotesViewLink.text()).toMatch("My Quotes");
     expect(myQuotesViewLink.findComponent(RouterLinkStub).props().to).toBe(
       "/my-quotes"
+    );
+    // User Notes navlink
+    const userNotesViewLink = wrapper.find(selectors.userNotesPageLink);
+    expect(userNotesViewLink.text()).toMatch("User Notes");
+    expect(userNotesViewLink.findComponent(RouterLinkStub).props().to).toBe(
+      "/user-notes"
     );
     // Mock authentication having completed
     const userStore = useUserStore();

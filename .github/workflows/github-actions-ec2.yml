@@ -50,7 +50,16 @@ jobs:
           repository: mg-login-examples/login-backend-fastapi
           path: backend
       - name: Add mysql password text file for a test mysql container
-        run: echo "password" >> backend/db/mysql_pwd.txt
+        run: echo "password" > backend/docker_secrets/mysql_pwd.txt
+      - name: Add mongo password text file for a test mongo container
+        run: echo "password" > backend/docker_secrets/mongo_pwd.txt
+      - name: Add redis password text file for a test redis container
+        run: echo "password" > backend/docker_secrets/redis_pwd.txt
+      - name: Add github secret mailslurp api key as a text file used as a docker secret
+        run: 'echo "$MAILSLURP_API_KEY" > docker_secrets/mailslurp_api_key.txt'
+        shell: bash
+        env:
+          MAILSLURP_API_KEY: ${{secrets.MAILSLURP_API_KEY}}
       - name: Run e2e tests
         env:
           CYPRESS_MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}

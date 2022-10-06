@@ -27,3 +27,4 @@ pnpm-debug.log*
 
 allure-results
 /backend
+/docker_secrets/*.txt

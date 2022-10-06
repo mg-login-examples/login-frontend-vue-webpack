@@ -73,7 +73,6 @@ export const useQuotesStore = defineStore("quotes", {
         } catch (error) {
           const errorStore = useErrorsStore();
           errorStore.handleError(error);
-          this.userQuotes = [];
         }
       }
     },

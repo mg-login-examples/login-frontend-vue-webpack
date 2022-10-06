@@ -5,6 +5,7 @@ import {
   RouteRecordRaw,
 } from "vue-router";
 import AllQuotes from "../views/AllQuotes.vue";
+import UserNotes from "../views/UserNotes.vue";
 import LoginView from "../views/LoginView.vue";
 import SignupView from "../views/SignupView.vue";
 import VerifyEmail from "../views/VerifyEmail.vue";
@@ -21,7 +22,15 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/my-quotes",
     name: "userQuotes",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/UserQuotes.vue"),
+      import(/* webpackChunkName: "userQuotes" */ "../views/UserQuotes.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/user-notes",
+    name: "userNotes",
+    component: UserNotes,
     meta: {
       requiresAuth: true,
     },

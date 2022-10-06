@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongo_db:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME-root_user}
+      - MONGO_INITDB_ROOT_PASSWORD_FILE=/run/secrets/mongo-password
+      - MONGO_INITDB_DATABASE=login
+    secrets:
+      - mongo-password
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/login --quiet
+      # interval: 10s
+      timeout: 20s
+      retries: 10
+    networks:
+      - backend
+    volumes:
+      - mongo-data:/var/lib/${MONGO_DOCKER_VOLUME-mongo}
+
+volumes:
+  mongo-data:
+
+secrets:
+  mongo-password:
+    file: backend/docker_secrets/mongo_pwd.txt
