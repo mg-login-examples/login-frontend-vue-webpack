@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  unit-tests:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     steps:
@@ -44,6 +44,12 @@ jobs:
             unzip results.zip &&
             rm results.zip &&
             curl http://localhost:5050/allure-docker-service/generate-report?project_id=frontend-unit
+  e2e-tests:
+    name: Run E2E Tests And Send Results To Allure Docker Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
       - name: Checkout backend repo
         uses: actions/checkout@v3
         with:
@@ -61,8 +67,6 @@ jobs:
         env:
           MAILSLURP_API_KEY: ${{secrets.MAILSLURP_API_KEY}}
       - name: Run e2e tests
-        env:
-          CYPRESS_MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
         run: ./script.sh run-e2e-tests
       - name: Zip allure reports
         if: success() || failure()
@@ -92,6 +96,11 @@ jobs:
             unzip results.zip &&
             rm results.zip &&
             curl http://localhost:5050/allure-docker-service/generate-report?project_id=frontend-e2e
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: [unit-tests, e2e-tests]
+    steps:
       - name: Build & Restart Frontend - build new container to serve latest frontend
         uses: appleboy/ssh-action@master
         with:
