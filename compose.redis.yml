@@ -17,7 +17,7 @@ services:
     networks:
       - backend
     volumes:
-      - redis-data:/var/lib/${REDIS_DOCKER_VOLUME-redis}
+      - redis-data:/data
 
 volumes:
   redis-data:

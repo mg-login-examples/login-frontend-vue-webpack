@@ -19,10 +19,12 @@ services:
     networks:
       - backend
     volumes:
-      - mongo-data:/var/lib/${MONGO_DOCKER_VOLUME-mongo}
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
 
 volumes:
   mongo-data:
+  mongo-config:
 
 secrets:
   mongo-password:
