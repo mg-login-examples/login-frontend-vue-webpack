@@ -3,7 +3,7 @@ case=${1:-default}
 if [ $case = "launch-frontend-local" ]
 then
    # Stop all frontend project's containers and build and start vueapp container
-   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.mongo.yml -f compose.redis.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -p frontend up --build
 elif [ $case = "launch-frontend-cloud-dev" ]
 then
@@ -47,6 +47,10 @@ then
    # Stop all frontend project's containers, build and run all frontend project's containers including backend
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.mongo.yml -f compose.redis.yml -f compose.vuecypress.yml -p frontend down
    docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.mongo.yml -f compose.redis.yml -p frontend up --build
+elif [ $case = "launch-databases" ]
+then
+   docker-compose -f docker-compose.yml -f compose.vueapp_compiled.yml -f compose.vueapp_static.yml -f compose.fastapi.yml -f compose.mysql.yml -f compose.mongo.yml -f compose.redis.yml -f compose.vuecypress.yml -p frontend down
+   docker-compose -f docker-compose.yml -f compose.mysql.yml -f compose.mongo.yml -f compose.redis.yml -p frontend up --build
 elif [ $case = "down" ]
 then
    # Stop all backend project's containers
