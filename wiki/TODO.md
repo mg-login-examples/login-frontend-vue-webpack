@@ -3,8 +3,15 @@
         - src/components/Notes/NotesLeftPanel.vue
         - src/components/Notes/OpenNote.vue
         - src/views/UserNotes.vue
+    - Websocket & Group chat feature:
+        - src/App.vue
+        - src/store/webSocket.ts
+        - src/utils/webSocketUtils/index.ts
+        - src/views/GroupChat.vue
+
 - Add missing E2E tests:
     - Feature - user notes
+    - Feature - group chat
 
 - Parallelize each cypress test
 

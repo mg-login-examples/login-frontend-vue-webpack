@@ -21,6 +21,13 @@
       >
         User Notes
       </router-link>
+      <router-link
+        to="/group-chat"
+        class="px-4"
+        data-test="topbar--group-chat-link"
+      >
+        Group Chat
+      </router-link>
       <div class="flex-grow"></div>
       <router-link
         v-if="!userStore.user && userStore.authAttemptedOnce"

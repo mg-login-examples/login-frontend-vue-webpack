@@ -7,6 +7,7 @@ import MockSignupView from "./mockVues/SignupView.vue";
 import MockVerifyEmail from "./mockVues/VerifyEmail.vue";
 import MockForgotPassword from "./mockVues/ForgotPassword.vue";
 import MockUserNotes from "./mockVues/UserNotes.vue";
+import MockGroupChat from "./mockVues/GroupChat.vue";
 
 export function getMockRoutes(
   routes: Array<RouteRecordRaw>
@@ -34,6 +35,9 @@ export function getMockRoutes(
     }
     if (routeClone.name === "userNotes") {
       routeClone.component = MockUserNotes;
+    }
+    if (routeClone.name === "groupChat") {
+      routeClone.component = MockGroupChat;
     }
     mockRoutes.push(routeClone);
   }

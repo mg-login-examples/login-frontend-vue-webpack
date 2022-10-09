@@ -6,6 +6,7 @@ import {
 } from "vue-router";
 import AllQuotes from "../views/AllQuotes.vue";
 import UserNotes from "../views/UserNotes.vue";
+import GroupChat from "../views/GroupChat.vue";
 import LoginView from "../views/LoginView.vue";
 import SignupView from "../views/SignupView.vue";
 import VerifyEmail from "../views/VerifyEmail.vue";
@@ -31,6 +32,14 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/user-notes",
     name: "userNotes",
     component: UserNotes,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/group-chat",
+    name: "groupChat",
+    component: GroupChat,
     meta: {
       requiresAuth: true,
     },

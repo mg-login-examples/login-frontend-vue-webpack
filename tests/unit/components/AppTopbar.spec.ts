@@ -17,13 +17,14 @@ const selectors = {
   allQuotesPageLink: "[data-test='topbar--all-quotes-link']",
   myQuotesPageLink: "[data-test='topbar--user-quotes-link']",
   userNotesPageLink: "[data-test='topbar--user-notes-link']",
+  groupChatPageLink: "[data-test='topbar--group-chat-link']",
   loginPageLink: "[data-test='topbar--login-link']",
   logoutButton: "[data-test='topbar--logout-button']",
   usernameLabel: "[data-test='topbar--user-name']",
 };
 
 describe("AppTopbar.vue", () => {
-  it("has All Quotes, My Quotes and Login navlinks", async () => {
+  it("has All Quotes, My Quotes, UserNotes, GroupChat and Login navlinks", async () => {
     const wrapper = mount(AppTopbar, {
       global: {
         stubs: { RouterLink: RouterLinkStub, FontAwesomeIcon: true },
@@ -47,6 +48,12 @@ describe("AppTopbar.vue", () => {
     expect(userNotesViewLink.text()).toMatch("User Notes");
     expect(userNotesViewLink.findComponent(RouterLinkStub).props().to).toBe(
       "/user-notes"
+    );
+    // Group Chat navlink
+    const groupChatViewLink = wrapper.find(selectors.groupChatPageLink);
+    expect(groupChatViewLink.text()).toMatch("Group Chat");
+    expect(groupChatViewLink.findComponent(RouterLinkStub).props().to).toBe(
+      "/group-chat"
     );
     // Mock authentication having completed
     const userStore = useUserStore();
