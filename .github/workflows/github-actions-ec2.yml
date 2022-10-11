@@ -116,7 +116,6 @@ jobs:
             cd frontend-vue &&
             git clone -b main https://github.com/mg-login-examples/login-backend-fastapi.git backend &&
             cd .. &&
-            cp frontend-vue-old/backend/db/mysql_pwd.txt frontend-vue/backend/db/ &&
             sudo rm -rf frontend-vue-old &&
             cd frontend-vue &&
             ./script.sh launch-frontend-cloud-dev
