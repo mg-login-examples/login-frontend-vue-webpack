@@ -1,56 +1,80 @@
 import { defineStore } from "pinia";
 import mitt, { Emitter } from "mitt";
 
-import { WebSocketWrapper } from "@/utils/webSocketUtils";
-import { SocketEvents } from "@/types/socket-event-emitter.type";
+import {
+  getWebsocketManager,
+  WebSocketManager,
+} from "@/utils/webSocketUtils/websocket-manager";
+import { SocketEvents } from "@/utils/webSocketUtils/socket-event-emitter.type";
 
 const socketEventEmitter = mitt<SocketEvents>();
 
 interface WebSocketState {
   socketUrl: string;
-  socketWrapper: { socket: WebSocket } | null;
+  socketManager: WebSocketManager | null;
   socketEventEmitter: Emitter<SocketEvents>;
+  channelSubscribeCallbacksForSocketReconnect: {
+    channel: string;
+    callback: () => void;
+  }[];
 }
 
 export const useWebSocketStore = defineStore("websocket", {
   state: (): WebSocketState => ({
     socketUrl: process.env.VUE_APP_BACKEND_WEBSOCKET_URL,
-    socketWrapper: null,
+    socketManager: null,
     socketEventEmitter: socketEventEmitter,
+    channelSubscribeCallbacksForSocketReconnect: [],
   }),
   getters: {
-    socketReady: (state) => state.socketWrapper?.socket.readyState,
+    socketReady: (state) => state.socketManager?.socket.readyState,
   },
   actions: {
-    connect() {
-      if (!this.socketWrapper) {
-        this.socketWrapper = WebSocketWrapper(
+    connectSocketIfNotConnected() {
+      if (!this.socketManager) {
+        this.socketManager = getWebsocketManager(
           this.socketUrl,
           this.socketEventEmitter
         );
       }
     },
-    disconnect() {
-      if (this.socketWrapper) {
-        this.socketWrapper.socket.close();
-        this.socketWrapper = null;
+    disconnectSocketIfConnected() {
+      if (this.socketManager) {
+        this.socketManager.socket.close();
+        this.socketManager = null;
+        for (const item of this.channelSubscribeCallbacksForSocketReconnect) {
+          this.socketEventEmitter.off("socketConnected", item.callback);
+        }
+        this.channelSubscribeCallbacksForSocketReconnect = [];
       }
     },
-    reconnect() {
-      this.disconnect();
-      this.connect();
+    reconnectSocket() {
+      this.disconnectSocketIfConnected();
+      this.connectSocketIfNotConnected();
     },
     sendBySocket(payload: { action: string; channel: string; data?: object }) {
-      if (this.socketWrapper) {
+      if (this.socketManager) {
         const payload_as_string = JSON.stringify(payload);
-        this.socketWrapper.socket.send(payload_as_string);
+        this.socketManager.socket.send(payload_as_string);
       }
     },
     subscribeToChannel(channelName: string) {
-      this.sendBySocket({ action: "subscribe", channel: channelName });
+      const sendSubscribeMessage = () => {
+        this.sendBySocket({ action: "subscribe", channel: channelName });
+      };
+      sendSubscribeMessage();
+      this.socketEventEmitter.on("socketConnected", sendSubscribeMessage);
+      this.channelSubscribeCallbacksForSocketReconnect.push({
+        channel: channelName,
+        callback: sendSubscribeMessage,
+      });
     },
     unsubscribeFromChannel(channelName: string) {
       this.sendBySocket({ action: "unsubscribe", channel: channelName });
+      this.channelSubscribeCallbacksForSocketReconnect =
+        this.channelSubscribeCallbacksForSocketReconnect.filter(
+          (item) => item.channel !== channelName
+        );
     },
     sendBySocketToChannel(channelName: string, payload: object) {
       this.sendBySocket({

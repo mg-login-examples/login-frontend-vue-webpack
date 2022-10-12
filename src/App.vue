@@ -15,16 +15,9 @@ import AppContainer from "@/components/generic/layout/AppContainer.vue";
 import AppMainContainer from "@/components/generic/layout/AppMainContainer.vue";
 import AppTopbar from "@/components/AppTopbar.vue";
 import { useUserStore } from "@/store/user";
-import { useWebSocketStore } from "@/store/webSocket";
+import { connectDisconnectSocketOnUserLogin } from "@/utils/webSocketUtils/manage-socket-on-user-change";
 
 const userStore = useUserStore();
-const webSocketStore = useWebSocketStore();
 
-userStore.$subscribe((a, userState) => {
-  if (userState.user) {
-    webSocketStore.reconnect();
-  } else {
-    webSocketStore.disconnect();
-  }
-});
+connectDisconnectSocketOnUserLogin();
 </script>

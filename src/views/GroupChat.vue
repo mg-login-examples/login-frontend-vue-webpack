@@ -10,7 +10,7 @@
             class="p-2 my-4 w-full border"
           />
           <button
-            @click="tryToEnterChatRoom"
+            @click="requestChatRoomEntry"
             class="px-2 py-2 my-4 bg-slate-200 w-full"
           >
             Enter Chat Room
@@ -43,12 +43,14 @@
         </div>
         <input
           v-model="messageToSendText"
-          @keyup.enter="sendMessage"
+          @keyup.enter="sendChatMessage"
           type="text"
           placeholder="Chat"
           class="p-2 border-2"
         />
-        <button @click="sendMessage" class="p-2 my-2 bg-blue-200">Send</button>
+        <button @click="sendChatMessage" class="p-2 my-2 bg-blue-200">
+          Send
+        </button>
       </div>
     </div>
   </div>
@@ -66,25 +68,16 @@ const webSocketStore = useWebSocketStore();
 
 const chatName = ref("");
 const chatEntered = ref(false);
-const chatMessages = ref<{ user: string; text: string }[]>([]);
 const roomChannelName = computed(() => `group-chat/${chatName.value}`);
+
+const chatMessages = ref<{ user: string; text: string }[]>([]);
 const messageToSendText = ref("");
 const chatMessagesViewEl = ref<HTMLElement>();
 
-function subscribeToChatRoom() {
-  if (webSocketStore.socketReady) {
-    webSocketStore.subscribeToChannel(roomChannelName.value);
-  }
-}
-function unsubscribeFromChatRoom() {
-  if (webSocketStore.socketReady) {
-    webSocketStore.unsubscribeFromChannel(roomChannelName.value);
-  }
-}
 function handleChatRoomIncommingMessages(socketMessage: SocketReceiveMessage) {
   if (socketMessage.channel === roomChannelName.value) {
     if ((socketMessage.message as any).channelSubscribed) {
-      enterChatRoom();
+      chatEntered.value = true;
     } else if (
       (socketMessage.message as any).user &&
       (socketMessage.message as any).text
@@ -101,29 +94,20 @@ function handleChatRoomIncommingMessages(socketMessage: SocketReceiveMessage) {
     }
   }
 }
-function tryToEnterChatRoom() {
+function requestChatRoomEntry() {
   if (chatName.value) {
     // setup listener to handle incomming channel messages
     webSocketStore.socketEventEmitter.on(
       "message",
       handleChatRoomIncommingMessages
     );
-    // send subscribe channel message
-    subscribeToChatRoom();
-    // setup listener to resubscribe to chat room if websocket reconnects
-    webSocketStore.socketEventEmitter.on(
-      "socketConnected",
-      subscribeToChatRoom
-    );
+    // subscribe to receive messages from chat room
+    webSocketStore.subscribeToChannel(roomChannelName.value);
   }
 }
-function enterChatRoom() {
-  chatEntered.value = true;
-}
 function leaveChatRoom() {
-  unsubscribeFromChatRoom();
+  webSocketStore.unsubscribeFromChannel(roomChannelName.value);
   chatEntered.value = false;
-  webSocketStore.socketEventEmitter.off("socketConnected", subscribeToChatRoom);
   webSocketStore.socketEventEmitter.off(
     "message",
     handleChatRoomIncommingMessages
@@ -131,7 +115,7 @@ function leaveChatRoom() {
   chatName.value = "";
 }
 
-function sendMessage() {
+function sendChatMessage() {
   if (webSocketStore.socketReady && userStore.user && messageToSendText.value) {
     webSocketStore.sendBySocketToChannel(roomChannelName.value, {
       text: messageToSendText.value,
