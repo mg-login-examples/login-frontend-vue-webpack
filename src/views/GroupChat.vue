@@ -61,7 +61,9 @@ import { ref, computed, onUnmounted, nextTick } from "vue";
 
 import { useUserStore } from "@/store/user";
 import { useWebSocketStore } from "@/store/webSocket";
-import { SocketReceiveMessage } from "@/models/socket-receive-message.model";
+import { SocketReceiveChannelSubscriptionStatus } from "@/models/socket-receive-channel-subscription-status.model";
+import { SocketReceiveChannelMessage } from "@/models/socket-receive-channel-message.model";
+import { GroupChatMessage } from "@/models/group-chat-message.model";
 
 const userStore = useUserStore();
 const webSocketStore = useWebSocketStore();
@@ -70,35 +72,30 @@ const chatName = ref("");
 const chatEntered = ref(false);
 const roomChannelName = computed(() => `group-chat/${chatName.value}`);
 
-const chatMessages = ref<{ user: string; text: string }[]>([]);
+const chatMessages = ref<GroupChatMessage[]>([]);
 const messageToSendText = ref("");
 const chatMessagesViewEl = ref<HTMLElement>();
 
-function handleChatRoomIncommingMessages(socketMessage: SocketReceiveMessage) {
-  if (socketMessage.channel === roomChannelName.value) {
-    if ((socketMessage.message as any).channelSubscribed) {
-      chatEntered.value = true;
-    } else if (
-      (socketMessage.message as any).user &&
-      (socketMessage.message as any).text
-    ) {
-      chatMessages.value.push(
-        socketMessage.message as { user: string; text: string }
-      );
-      nextTick(() => {
-        chatMessagesViewEl.value?.scrollTo(
-          0,
-          chatMessagesViewEl.value?.scrollHeight
+// setup listener to handle channel subscription success / failure
+webSocketStore.socketEventEmitter.on(
+  "channelSubscriptionStatus",
+  (channelSubscription: SocketReceiveChannelSubscriptionStatus) => {
+    if (channelSubscription.channel === roomChannelName.value) {
+      chatEntered.value = channelSubscription.subscribed;
+      if (!channelSubscription.subscribed) {
+        webSocketStore.socketEventEmitter.off(
+          "channelMessage",
+          handleChatRoomIncommingMessages
         );
-      });
+      }
     }
   }
-}
+);
 function requestChatRoomEntry() {
   if (chatName.value) {
     // setup listener to handle incomming channel messages
     webSocketStore.socketEventEmitter.on(
-      "message",
+      "channelMessage",
       handleChatRoomIncommingMessages
     );
     // subscribe to receive messages from chat room
@@ -109,18 +106,31 @@ function leaveChatRoom() {
   webSocketStore.unsubscribeFromChannel(roomChannelName.value);
   chatEntered.value = false;
   webSocketStore.socketEventEmitter.off(
-    "message",
+    "channelMessage",
     handleChatRoomIncommingMessages
   );
   chatName.value = "";
 }
-
 function sendChatMessage() {
   if (webSocketStore.socketReady && userStore.user && messageToSendText.value) {
     webSocketStore.sendBySocketToChannel(roomChannelName.value, {
       text: messageToSendText.value,
     });
     messageToSendText.value = "";
+  }
+}
+function handleChatRoomIncommingMessages(
+  channelMessage: SocketReceiveChannelMessage
+) {
+  if (channelMessage.channel === roomChannelName.value) {
+    const groupChatMessage = channelMessage.message as GroupChatMessage;
+    chatMessages.value.push(groupChatMessage);
+    nextTick(() => {
+      chatMessagesViewEl.value?.scrollTo(
+        0,
+        chatMessagesViewEl.value?.scrollHeight
+      );
+    });
   }
 }
 

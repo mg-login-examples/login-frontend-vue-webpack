@@ -1,6 +1,8 @@
 import { Emitter } from "mitt";
 
 import { SocketEvents } from "@/utils/webSocketUtils/socket-event-emitter.type";
+import { SocketReceiveChannelSubscriptionStatus } from "@/models/socket-receive-channel-subscription-status.model";
+import { SocketReceiveChannelMessage } from "@/models/socket-receive-channel-message.model";
 
 export type WebSocketManager = { socket: WebSocket };
 
@@ -24,6 +26,7 @@ function getSocket(
 ): WebSocket {
   const socket = new WebSocket(webSocketUrl);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   socket.onopen = function (ev: Event) {
     socketEventEmitter.emit("socketConnected");
   };
@@ -34,9 +37,26 @@ function getSocket(
 
   // Emit payload on message
   socket.onmessage = (ev) => {
-    const obj = JSON.parse(ev.data);
-    if (typeof obj != "object") return;
-    socketEventEmitter.emit("message", obj);
+    const socketReceiveData = JSON.parse(ev.data);
+    if (
+      socketReceiveData.channel &&
+      socketReceiveData.subscribed !== undefined
+    ) {
+      socketEventEmitter.emit(
+        "channelSubscriptionStatus",
+        socketReceiveData as SocketReceiveChannelSubscriptionStatus
+      );
+    } else if (
+      socketReceiveData.channel &&
+      socketReceiveData.message !== undefined
+    ) {
+      socketEventEmitter.emit(
+        "channelMessage",
+        socketReceiveData as SocketReceiveChannelMessage
+      );
+    } else {
+      socketEventEmitter.emit("otherMessage", socketReceiveData);
+    }
   };
 
   return socket;
